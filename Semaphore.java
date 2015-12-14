@@ -1,15 +1,14 @@
-/* NOTE :
-  Cette classe est complète : aucun ajout n'y est normalement nécéssaire
- */
+//Aquila NCM7 LPSIL 2015-2016
 
 /* NOTE :
-   This class acts like a classic semaphore, i.e. a synchronization barrier to prevent
-   thread to continue their execution until there are tokens in the semaphore.
-   A semaphore is a box containing tokens. The behavior is the following :
-      - a thread can directly take a token in the box if there is at least one.
-      - if there are no tokens, the thread must wait until one is put.
-      - a thread can put as many tokens he wants in the box. In this case, he wakes up threads taht are trying to take  a token.
+   Cette classe se comporte comme un sémaphore classique, à savoir une barrière de synchronisation pour empêcher
+    fil pour poursuivre leur exécution jusqu'à ce qu'il n'y jetons dans le sémaphore.
+    Un sémaphore est une boîte contenant des jetons. Le comportement est le suivant:
+       - Un thread peut directement prendre un jeton dans la case si il ya au moins un.
+       - Si il n'y a pas de jetons, le thread doit attendre que l'un soit mis.
+       - Un thread peut mettre autant de jetons qu'il veut dans la boîte.
  */
+
 class Semaphore {
 
     int nbTokens; // nombre de jetons
