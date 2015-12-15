@@ -1,6 +1,4 @@
-/* NOTE :
-  Cette classe est incomplète : les commentaires sont là pour vous guider
- */
+//En cour de finition
 
 import java.util.*;
 
@@ -8,12 +6,12 @@ class Party {
 
     private static Random loto = new Random(Calendar.getInstance().getTimeInMillis());
 
-    public final static int PARTY_WAITING = 0; // waiting for sufficent number of player join the party
-    public final static int PARTY_ONGOING = 1; // party begun nut not in special state (see below)
-    public final static int PARTY_MUSTPLAY = 2; // players must play sthg
+    public final static int PARTY_WAITING = 0; // Attendre que le nombre suffisant de joueur aient rejoint la partie.
+    public final static int PARTY_ONGOING = 1; // Partie commencée sans etat spécial
+    public final static int PARTY_MUSTPLAY = 2; // Les joueurs doivent jouer
     public final static int PARTY_END = 3;
 
-    public final static int RES_ERROR = -2; // represents an error of a player
+    public final static int RES_ERROR = -2; // Error d'un joueur
     public final static int RES_LOST = -1; // represents the fact taht a player has lost (not an error) the current turn
     public final static int RES_NULL = 0; // represents the fact that nothing happens to a player during the current turn
     public final static int RES_WIN = 1; // represents the fact that a player won the current turn
@@ -114,32 +112,61 @@ class Party {
     }
 
     public synchronized boolean removePlayer(Player other) {
+
         // supprimer other de players
+        players.remove(other);
+
         // décrémenter nb joueur dans la partie
+        this.nbrJoueurs--;
+
         // remettre id de player à -1 (= pas dans une partie)
-        // mettre des jetons dans le sémaphore (au cas où des threads soient bloqués dans la barrière de début de tour)
+        currentPlayer.id = -1;
+
+        // mettre des jetons dans le sémaphore (au cas où des threads soient
+        // bloqués dans la barrière de début de tour)
+        commenceTour.put(nbrJoueurs);
+
         // si nb joueurs dans partie == 0, renvoyer vrai sinon renvoyer false
+        if (nbrJoueurs == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public synchronized void waitForPartyStarts() {
+
         // tant que état partie == en attente ET nb joueurs dans la partie != nb joueurs nécessaires
-        //    faire dodo
+        while(this.getCurrentState() == PARTY_WAITING && nbrJoueurs != nbJoueursNecessaire) {
+          this.setCurrentState(PARTY_WAITING);
+        }
+        this.setCurrentState(PARTY_ONGOING);
     }
 
-    /* NOTE :
-       waitForTurnStarts() is based on a semaphore to implement a synchro barrier.
-       The seamphore is created with 0 token within. Thus, each thread trying to get a token will
-       have to wait until another one put tokens in the semaphore.
+    /**
+     * Attendre pour demarrer le tour :
+     * Est basé sur un sémaphore pour mettre en œuvre une barrière synchrone.
+     * Le seamphore est créé avec 0 jeton. Ainsi, chaque thread essayant d'obtenir un jeton
+     * devra attendre jusqu'à qu'un autre jeton soit mis dans le sémaphore.
      */
     public void waitForTurnStarts() {
         // incrementer nb joueurs dans le tour
+        nbPlayerInTurn++;
+
         // si nb joueurs dans le tour == nb joueurs dans partie
         //    remettre nb joueurs dans le tour à 0
         //    initialiser joueurs courant avec valeur joueur du prochain tour
         //    initialiser nouveau tour
         //    mettre des jetons dans le semaphore
-        // fsi
+        if (nbPlayerInTurn == nbrJoueurs) {
+            nbPlayerInTurn = 0;
+            currentPlayer = playerOfNextTurn;
+            initNewTurn();
+            commenceTour.put(nbrJoueurs);
+        }
+
         // prendre un jeton dans le sémaphore
+        commenceTour.put(1);
     }
 
     private synchronized void initNewTurn() {
