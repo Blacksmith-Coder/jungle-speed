@@ -1,6 +1,4 @@
-/* NOTE :
-  Cette classe est incomplète : les commentaires sont là pour vous guider
- */
+//FINI
 
 
 import java.util.*;
@@ -19,15 +17,17 @@ class Game {
     public synchronized Party createParty(String name, Player creator, int nbPlayers) {
         Party p = null;
         for (Party party : parties){
+            // si partie déjà créée par creator, alors renvoyer null
             if (party.players.get(0).equals(creator.name)){
                 return null;
             } else {
+                // sinon, créer une Party p et l'ajouter à parties
                 p = new Party(name, creator, nbPlayers);
                 parties.add(p);
             }
         }
-        // si partie déjà créée par creator, alors renvoyer null
-        // sinon, créer une Party p et l'ajouter à parties
+
+
         return p;
     }
 
@@ -35,16 +35,20 @@ class Game {
         Player p = null;
         for (Party party : parties){
             for (Player player : players){
+                // si player avec name comme nom existe déjà, renvoyer null
                 if (player.name.equals(name)){
                     return null;
-                } else {
+
+                }
+                // sinon, créer une Player p et l'ajouter à players
+                else {
                     p = new Player(name);
                     players.add(p);
                 }
             }
         }
-        // si player avec name comme nom existe déjà, renvoyer null
-        // sinon, créer une Player p et l'ajouter à players
+
+
         return p;
     }
 
