@@ -9,7 +9,7 @@ class Party {
     public final static int PARTY_WAITING = 0; // Attendre que le nombre suffisant de joueur aient rejoint la partie.
     public final static int PARTY_ONGOING = 1; // Partie commencée sans etat spécial
     public final static int PARTY_MUSTPLAY = 2; // Les joueurs doivent jouer
-    public final static int PARTY_END = 3;
+    public final static int PARTY_END = 3;  // Etat de fin de la partie
 
     public final static int RES_ERROR = -2; // Erreur d'un joueur
     public final static int RES_LOST = -1; // représente le fait qu'un joueur ait perdu (sauf erreur) dans le tou courant
@@ -24,22 +24,24 @@ class Party {
     int nbrJoueurs; // Nombre de joueurs
 
 
-    Semaphore commenceTour; // Barrière de synchronisation du thred au début du tour.
-    /* NOTE :
+    Semaphore commenceTour; // Barrière de synchronisation du thread au début du tour.
+
+    int state;
+    /*
       Quatres états possibles :
          0 = Attendre des joueurs,
          1 = en cours,
          2 = Joueurs doivent choisirs
          3 = fin de la partie
      */
-    int state;
+
     CardPacket allCards; // Le packet avec toutes les cartes.
     List<Card> underTotem; // Liste des cartes sous le totem (actuelle).
 
     int nbPlayerInTurn; // Nombre de joueurs en début de tour.
     Player currentPlayer; // Le joueur en cour.
     Player playerOfNextTurn; // le joueur au prochain tour.
-    Card lastRevealedCard; // La carte révélé par le jouer durant le tour.
+    Card lastRevealedCard; // La carte révélé par le joueur durant le tour.
     boolean totemTaken; // devient true des que le totem est pris durant le tour.
     boolean totemHand; // devient true des qu'un joueur est le premier à mettre la main sur le totem.
     List<Player> played; // Liste des joueurs ayant déjà joué.
@@ -193,26 +195,46 @@ class Party {
     }
 
     public synchronized void setCurrentState(int newState) {
+
         // les règles à tester dans l'ordre pour gérer l'état de la partie :
-        //    qq soit etat partie, si newState = fin -> etat = fin
+        // quelque soit etat partie, si newState = fin -> etat = fin
+        if (newState == PARTY_END) {
+            state = PARTY_END;
+        }
+
         //    si etat partie = en attente, alors seul newState = en cours est valide
+        if (state == PARTY_WAITING && newState == PARTY_ONGOING) {
+            state = PARTY_ONGOING;
+        }
+
         //    si etat partie = en cours, alors seul newState = joueur doit jouer est valide
+        if (state == PARTY_ONGOING && newState == PARTY_MUSTPLAY) {
+            state = PARTY_MUSTPLAY;
+        }
+
         //    si etat partie = joueur doit jouer, alors seul newState = en cours est valide
+        if (state == PARTY_MUSTPLAY && newState == PARTY_ONGOING) {
+            state = PARTY_ONGOING;
+        }
+
         // toute autre combinaison est invalide et ne fait rien
     }
 
     public synchronized Object getCurrentCards() {
+        // Récupération de toutes les cartes visibles autour de la table.
+        CardPacket list = getAllRevealedCards();
+        list.
+
         Object s;
-        // récupérer toutes les cartes actuellement visibles autour de la table et en faire un objet
-        // NB : à vous de décider la classe de cette objet et comment il est construit.
-        // Vous pouvez par exemple simplement créer une chaîne de caractères
+
 
         return s;
     }
 
-    /* getAllRevealedCards() ;
-       In case of players are in error, we must collect all visible cards plus those under the totem
-       and distribute them among these players. This method does the first part
+    /**
+     * Methode qui récupère toutes les cartes visibles et les
+     * renvoie sous forme d'un paquet de cartes.
+     * @return
      */
     private CardPacket getAllRevealedCards() {
 

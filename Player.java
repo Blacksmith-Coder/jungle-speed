@@ -9,13 +9,13 @@ class Player {
     String name;
     CardPacket hiddenCards;
     CardPacket revealedCards;
-    int id; // player id in the current Party, -1 if he didn't join a party.
+    int id; // Id joueur dans la partie courante, -1 si il n'a pas rejoins de partie.
 
     public Player(String name) {
         this.name = name;
         id = -1;
-        hiddenCards = null; //will be set when joining party
-        revealedCards = null; //will be set when joining party
+        hiddenCards = null; //Sera définie lors qu'une partie sera rejointe
+        revealedCards = null; //Sera définie ultérieurement aussi.
     }
 
     public void joinParty(int id, List<Card> heap) {

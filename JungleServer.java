@@ -34,7 +34,7 @@ class JungleServer {
             conn = new ServerSocket(port);
         }
         catch(IOException e) {
-            System.out.println("cannot create server socket: "+e.getMessage());
+            System.out.println("Erreur à la création du serveur : "+e.getMessage());
             System.exit(1);
         }
 
@@ -49,7 +49,7 @@ class JungleServer {
 
             }
             catch(IOException e) {
-                System.out.println("communication problem: "+e.getMessage());
+                System.out.println("Problème de connection : "+e.getMessage());
             }
         }
     }
