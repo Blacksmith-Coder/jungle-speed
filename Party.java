@@ -11,10 +11,10 @@ class Party {
     public final static int PARTY_MUSTPLAY = 2; // Les joueurs doivent jouer
     public final static int PARTY_END = 3;
 
-    public final static int RES_ERROR = -2; // Error d'un joueur
-    public final static int RES_LOST = -1; // represents the fact taht a player has lost (not an error) the current turn
-    public final static int RES_NULL = 0; // represents the fact that nothing happens to a player during the current turn
-    public final static int RES_WIN = 1; // represents the fact that a player won the current turn
+    public final static int RES_ERROR = -2; // Erreur d'un joueur
+    public final static int RES_LOST = -1; // représente le fait qu'un joueur ait perdu (sauf erreur) dans le tou courant
+    public final static int RES_NULL = 0; // Représente le fait que rien n'arrive à un joueur pendant le tour actuel
+    public final static int RES_WIN = 1; // Représente le fait qu'un joueur ai gagné le tour actuel
 
     String name; //Le nom de la partie
     Player creator; // Le créateur
