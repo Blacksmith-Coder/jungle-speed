@@ -85,7 +85,7 @@ class ThreadServer extends Thread {
                 currentParty.pool.removeStream(player.id);
                 boolean ret = currentParty.removePlayer(player);
                 if (ret){
-                    if (currentParty.nbPlayerInParty == 0){
+                    if (currentParty.nbrJoueurs == 0){
                         game.removeParty(currentParty);
                     }
                 }

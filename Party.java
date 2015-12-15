@@ -20,44 +20,48 @@ class Party {
 
     String name; //Le nom de la partie
     Player creator; // Le créateur
-    int nbNeededPlayers; // Le nombre de places de la partie
+    int nbJoueursNecessaire; // Le nombre de joueurs convenu pour la partie
     ArrayList<Player> players; // La liste des joueurs
     OutputStreamPool pool; // Une classe qui gère les flux
-    int nbPlayerInParty; // Nombre de joueurs
+    int nbrJoueurs; // Nombre de joueurs
 
 
-
-    Semaphore commenceTour; // barrier to synchronize thread at the begining of a turn.
+    Semaphore commenceTour; // Barrière de synchronisation du thred au début du tour.
     /* NOTE :
-      in order to manage the party correctly and notably, if it's over, state attribute
-      represents one of the four possible states :
-         0 = waiting for players,
-         1 = in progress,
-         2 = players must choose an action (take, hand or nothing)
-         3 = end of party (winner or disconnection)
+      Quatres états possibles :
+         0 = Attendre des joueurs,
+         1 = en cours,
+         2 = Joueurs doivent choisirs
+         3 = fin de la partie
      */
     int state;
-    CardPacket allCards; // the packet of all cards, before it is distributed to players.
-    List<Card> underTotem; // list of cards currently under the totem
+    CardPacket allCards; // Le packet avec toutes les cartes.
+    List<Card> underTotem; // Liste des cartes sous le totem (actuelle).
 
-    int nbPlayerInTurn; // number of players that begun the current turn
-    Player currentPlayer; // the player who reveals its card during the current turn
-    Player playerOfNextTurn; // the player of the next turn
-    Card lastRevealedCard; // the card revealed by the player during the current turn
-    boolean totemTaken; // becomes true as soon as the totem is taken by a player during the current turn
-    boolean totemHand; // becomes true as soon as a player is the first to put its hand on the totem during the current turn
-    List<Player> played; // the list of players that played during the current turn
-    List<Integer> result; // the result of the order of players.
-    String resultMsg; // message sent at the end of the turn
+    int nbPlayerInTurn; // Nombre de joueurs en début de tour.
+    Player currentPlayer; // Le joueur en cour.
+    Player playerOfNextTurn; // le joueur au prochain tour.
+    Card lastRevealedCard; // La carte révélé par le jouer durant le tour.
+    boolean totemTaken; // devient true des que le totem est pris durant le tour.
+    boolean totemHand; // devient true des qu'un joueur est le premier à mettre la main sur le totem.
+    List<Player> played; // Liste des joueurs ayant déjà joué.
+    List<Integer> result; // Le classement.
+    String resultMsg; // Message envoyé à la fin du tour.
 
-    public Party(String name, Player creator, int nbNeededPlayers) {
+    /**
+     * Constructeur de Partie
+     * @param name
+     * @param creator
+     * @param nbJoueursNecessaire
+     */
+    public Party(String name, Player creator, int nbJoueursNecessaire) {
         this.name = name;
         this.creator = creator;
-        this.nbNeededPlayers = nbNeededPlayers;
-        allCards = new CardPacket(nbNeededPlayers);
+        this.nbJoueursNecessaire = nbJoueursNecessaire;
+        allCards = new CardPacket(nbJoueursNecessaire);
         players = new ArrayList<Player>();
-        players.add(creator); // the creator of the party is the first player of the party
-        nbPlayerInParty = 1;
+        players.add(creator); // Le créateur de la partie est le premier joueur de la partie
+        nbrJoueurs = 1;
         List<Card> heap = allCards.takeXFirst(12);
         creator.joinParty(1,heap);
         underTotem = new ArrayList<Card>();
@@ -70,25 +74,46 @@ class Party {
         commenceTour = new Semaphore(0);
     }
 
+    //Terminée.
+    public synchronized void addPlayer(Player other) {
+        /*
+         si p n'est pas déjà dans cette partie & nbdejoueurs < nbjoueursnécessaires :
+         alors  ajouter other à players
+          */
+        for (Player test :  players) {
+            if (!test.equals(other) && this.nbrJoueurs < nbJoueursNecessaire) {
 
-    public synchronized void addPlayer(Player p) {
-        // si p n'est pas déjà dans cette partie ET le nb de joueurs < nb joueurs nécessaires :
-        //    ajouter p à players
-        //    incrémenter le nb de joueurs dans la partie
-        //    obtenir 12 cartes de allCards
-        //    donner à p son id et son pacquet (cf. joinParty() de Player)
-        //    si nb joueur == nb joueurs nécessaires
-        //        joueur prochain tour = premier joueur de players
-        //        nb joueurs dans le tour = 0
-        //        initialiser un nouveau tour
-        //        changer état partie à "en cours"
-        //        réveiller les thread en attente
-        //    fsi
-        // fsi
+                this.nbrJoueurs++; //On incrémente le nbr de joueur de la partie
+
+                // obtenir 12 cartes de allCards
+                Card pioche;
+                ArrayList<Card> distri = new ArrayList<Card>();
+                for (int i = 0; i <= 12; i++) {
+                    pioche = allCards.removeFirst();
+                    distri.add(pioche);
+                }
+
+                // Affectation au joueur de son id et de son paquet.
+                other.joinParty(loto.nextInt(),distri);
+                players.add(other);
+
+            } else if (nbrJoueurs == nbJoueursNecessaire) {
+
+                // joueur du prochain tour  = premier joueur de la liste.
+                playerOfNextTurn = players.get(0);
+                // nb de joueur dans le tour = 0
+                nbPlayerInTurn = 0;
+                // Initialiser un nouveau tour.
+                this.initNewTurn();
+                //Etat partie "en cours"
+                this.setCurrentState(1);
+                notifyAll();
+            }
+        }
     }
 
-    public synchronized boolean removePlayer(Player p) {
-        // supprimer p de players
+    public synchronized boolean removePlayer(Player other) {
+        // supprimer other de players
         // décrémenter nb joueur dans la partie
         // remettre id de player à -1 (= pas dans une partie)
         // mettre des jetons dans le sémaphore (au cas où des threads soient bloqués dans la barrière de début de tour)
@@ -173,9 +198,10 @@ class Party {
         return packet;
     }
 
-    /* getWinnerRevealedCards() ;
-       In case of a player won the turn, we must collect its visible cards plus those under the totem
-       and distribute them among loosers. This method does the first part
+    /* getWinnerRevealedCards() ; =>
+       Dans le cas où un joueur a gagné le tour, on doit recueillir ses cartes visibles en
+       plus de celles sous le totem et les distribuer parmi les perdants.
+       La méthode fait la première partie :
      */
     private CardPacket getWinnerRevealedCards(Player turnWinner) {
 
@@ -215,6 +241,7 @@ class Party {
 
        reutrned value : true if i'am the last thread to integrate the player order
      */
+
     public synchronized boolean integratePlayerOrder(Player player, int order) {
 
         played.add(player);
@@ -265,7 +292,7 @@ class Party {
         //    sinon le joueur a fait une erreur (i.e. un ordre invalide)
         // fsi
 
-        if (played.size() >= nbPlayerInParty) {
+        if (played.size() >= nbrJoueurs) {
             setCurrentState(PARTY_ONGOING);
             return true;
         }
@@ -278,7 +305,7 @@ class Party {
         List<Player> lstLoosers = new ArrayList<Player>(); // list of players that lost (not an error) this turn
         Player turnWinner = null;
 
-        for(int i=0;i< nbPlayerInParty;i++) {
+        for(int i=0;i< nbrJoueurs;i++) {
             if (result.get(i) == RES_ERROR) {
                 lstErrors.add(played.get(i));
             }
@@ -332,7 +359,7 @@ class Party {
             // if nobody wins this turn
             if (indexWinner == -1) {
                 resultMsg = resultMsg + "Nobody won this turn\n";
-                playerOfNextTurn = players.get(currentPlayer.id % nbPlayerInParty);
+                playerOfNextTurn = players.get(currentPlayer.id % nbrJoueurs);
                 resultMsg = resultMsg + "Next player: "+ playerOfNextTurn.name;
             }
             // else if a player is the winner : result depends on the last revealed cards
