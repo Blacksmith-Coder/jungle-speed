@@ -1,6 +1,4 @@
-/* NOTE :
-  Cette classe est incomplète : les commentaires sont là pour vous guider
- */
+//Terminer les exceptions
 
 import java.util.*;
 import java.io.*;
@@ -13,14 +11,21 @@ class ThreadServer extends Thread {
     Socket comm;
     Game game;
     Player player;
-    Party currentParty; // if null, player didn't join yet a party
+    Party currentParty; // Classe partagée : si null connection impossible.
     ObjectOutputStream oos;
     ObjectInputStream ois;
 
+    /**
+     * Le contructeur du ThreadServeur : prend en paramètre
+     * une instance de classe jeu
+     * une instance de socket en provenance de JungleServer
+     * @param game
+     * @param comm
+     */
     public ThreadServer(Game game, Socket comm) {
         this.game = game;
         this.comm = comm;
-        currentParty = null;
+        currentParty = null; // Pour l'instant on ne lance pas de partie.
     }
 
     public void run() {
@@ -28,13 +33,15 @@ class ThreadServer extends Thread {
         String pseudo;
         boolean ok = false;
 
-        System.out.println("client connected.");
+        System.out.println("Connection acceptée avec : " + comm.getRemoteSocketAddress().toString());
         try {
             ois = new ObjectInputStream(comm.getInputStream());
             oos = new ObjectOutputStream(comm.getOutputStream());
 
-            while (!ok){
-                pseudo = (String) ois.readObject();
+            while (!ok){ //Tant que c'est pas OK
+                pseudo = (String) ois.readObject(); //On cherche à récupérer le pseudo
+
+                // On vérifie que pas de doublon pseudo.
                 for (Player p : game.players){
                     if (p.name.equals(pseudo)){
                         ok = false;
@@ -44,29 +51,28 @@ class ThreadServer extends Thread {
                     }
                 }
 
+                //On envoie au client ce qu'il en est de la décision
                 if (ok){
+
+                    //On crée un joueur si il n'existe pas.
                     player = new Player(pseudo);
+                    //On prévient le client que c'est OK (true)
                     oos.writeBoolean(true);
                 } else {
+                    //Sinon on renvoie false au client
                     oos.writeBoolean(false);
                 }
                 oos.flush();
 
             }
-            // initialisation des flux objet
-            // tant que pas ok
-            //    recevoir pseudo
-            //    si pseudo n'existe pas
-            //       créer joueur (cf. classe Game) -> player
-            //       envoyer true au client
-            //    sinon envoyer false au client
+
         }
         catch(IOException e) {
-            System.err.println("problem with client connection. Aborting");
+            System.err.println("Problème de connection (IO)");
             return;
         }
         catch(ClassNotFoundException e) {
-            System.err.println("problem with client request. Aborting");
+            System.err.println("Problème de requête client/serveur (ClassNotFound)");
             return;
         }
 
@@ -198,14 +204,14 @@ class ThreadServer extends Thread {
             String nomParty = (String) ois.readObject();
             int nbJoueurs = ois.readInt();
             Party party = game.createParty(nomParty ,player, nbJoueurs);
+
+            //On ajoute le flux oos à la partie crée :
             party.pool.addStream(player.id, oos);
             rep = true;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        // traiter requete CREATE PARTY (sans oublier les cas d'erreur)
-        // NB : ne pas oublier d'ajouter le flux oos au pool de la partie créée
         return rep;
     }
 
@@ -218,8 +224,9 @@ class ThreadServer extends Thread {
         Party party = game.parties.get(numParty);
         game.playerJoinParty(player, game.parties.get(numParty));
 
+        // On ajoute le flux oos au pool de la partie rejointe
         party.pool.addStream(player.id, oos);
-        // NB : ne pas oublier d'ajouter le flux oos au pool de la partie rejointe
+
         return rep;
     }
 

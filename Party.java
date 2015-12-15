@@ -18,16 +18,16 @@ class Party {
     public final static int RES_NULL = 0; // represents the fact that nothing happens to a player during the current turn
     public final static int RES_WIN = 1; // represents the fact that a player won the current turn
 
-    String name; // the name of the party (as given by the creator
-    Player creator; // the creator of the party
-    int nbNeededPlayers; // the needed number of players for this party
-    ArrayList<Player> players; // in their order of arrival in the party
-    OutputStreamPool pool; // the pool of output streams taht can be used to send msg to all clients
-    int nbPlayerInParty; // number of players that begun the party. should always be the same as players.size()
+    String name; //Le nom de la partie
+    Player creator; // Le créateur
+    int nbNeededPlayers; // Le nombre de places de la partie
+    ArrayList<Player> players; // La liste des joueurs
+    OutputStreamPool pool; // Une classe qui gère les flux
+    int nbPlayerInParty; // Nombre de joueurs
 
 
 
-    Semaphore semBeginTurn; // barrier to synchronize thread at the begining of a turn.
+    Semaphore commenceTour; // barrier to synchronize thread at the begining of a turn.
     /* NOTE :
       in order to manage the party correctly and notably, if it's over, state attribute
       represents one of the four possible states :
@@ -67,7 +67,7 @@ class Party {
         state = PARTY_WAITING;
         currentPlayer = null;
         playerOfNextTurn = null;
-        semBeginTurn = new Semaphore(0);
+        commenceTour = new Semaphore(0);
     }
 
 

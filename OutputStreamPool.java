@@ -1,6 +1,4 @@
-/* NOTE :
-  Cette classe est complète : aucun ajout n'y est normalement nécéssaire
- */
+//FINI
 
 import java.io.*;
 import java.util.*;
@@ -23,7 +21,7 @@ public class OutputStreamPool {
 
     public synchronized void sendToAll(Object o) throws IOException {
         boolean err = false;
-        String msg = "cannot send to ";
+        String msg = "Ne peut pas poster à : ";
         for (Integer dest : pool.keySet()) {
             try {
                 pool.get(dest).writeObject(o);

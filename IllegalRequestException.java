@@ -1,6 +1,4 @@
-/* NOTE :
-  Cette classe est complète : aucun ajout n'y est normalement nécéssaire
- */
+//FINI
 
 
 public class IllegalRequestException extends Exception {
