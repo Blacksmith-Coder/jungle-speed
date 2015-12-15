@@ -88,7 +88,6 @@ class Party {
 
                 // obtenir 12 cartes de allCards
                  distri = allCards.takeXFirst(12);
-                }
 
                 // Affectation au joueur de son id et de son paquet.
                 other.joinParty(loto.nextInt(),distri);
