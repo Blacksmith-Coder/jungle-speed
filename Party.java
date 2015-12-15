@@ -81,16 +81,13 @@ class Party {
          alors  ajouter other à players
           */
         for (Player test :  players) {
+            List<Card> distri = new ArrayList<>();
             if (!test.equals(other) && this.nbrJoueurs < nbJoueursNecessaire) {
 
                 this.nbrJoueurs++; //On incrémente le nbr de joueur de la partie
 
                 // obtenir 12 cartes de allCards
-                Card pioche;
-                ArrayList<Card> distri = new ArrayList<Card>();
-                for (int i = 0; i <= 12; i++) {
-                    pioche = allCards.removeFirst();
-                    distri.add(pioche);
+                 distri = allCards.takeXFirst(12);
                 }
 
                 // Affectation au joueur de son id et de son paquet.
@@ -223,11 +220,12 @@ class Party {
     public synchronized Object getCurrentCards() {
         // Récupération de toutes les cartes visibles autour de la table.
         CardPacket list = getAllRevealedCards();
-        list.
-
-        Object s;
-
-
+        List<Card> unelist = list.getAll();
+        String chaine = "";
+        for (Card carte :  unelist) {
+            chaine += carte.card;
+        }
+        Object s = chaine;
         return s;
     }
 
