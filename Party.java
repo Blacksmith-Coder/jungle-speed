@@ -107,6 +107,7 @@ class Party {
                 this.initNewTurn();
                 //Etat partie "en cours"
                 this.setCurrentState(1);
+                //On réveille tous les threads.
                 notifyAll();
             }
         }
