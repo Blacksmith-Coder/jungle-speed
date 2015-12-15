@@ -75,7 +75,7 @@ class Party {
     //Terminée.
     public synchronized void addPlayer(Player other) {
         /*
-         si p n'est pas déjà dans cette partie & nbdejoueurs < nbjoueursnécessaires :
+         si other n'est pas déjà dans cette partie & nbdejoueurs < nbjoueursnécessaires :
          alors  ajouter other à players
           */
         for (Player test :  players) {
@@ -179,7 +179,7 @@ class Party {
 
     public synchronized Card revealCard() {
 
-        // update lastRevealedCard by asking current player to reveal a card
+        // demande au joueur actuel de révéler une carte.
         lastRevealedCard = currentPlayer.revealCard();
         return lastRevealedCard;
     }
@@ -384,24 +384,25 @@ class Party {
                     break;
                 }
             }
-            // if nobody wins this turn
+            // Si personne ne gagne lors de ce tour
             if (indexWinner == -1) {
                 resultMsg = resultMsg + "Nobody won this turn\n";
                 playerOfNextTurn = players.get(currentPlayer.id % nbrJoueurs);
                 resultMsg = resultMsg + "Next player: "+ playerOfNextTurn.name;
             }
-            // else if a player is the winner : result depends on the last revealed cards
+
+            // Autrement si un joueur est le gagnant : le résultat dépend des dernières cartes révélées
             else {
                 turnWinner = players.get(indexWinner);
                 resultMsg = resultMsg + turnWinner.name + " won the turn.\n";
 
-                // if winner wins on a take totem
+                // Si le gagnant remporte en prenant un totem
                 if (lastRevealedCard.card == 'T') {
                     resultMsg = resultMsg + "He puts his cards under the totem.\n";
                     underTotem.addAll(turnWinner.revealedCards.getAll());
                     turnWinner.revealedCards.clear();
                 }
-                // else if winner wins on a hand on totem
+                // le gagnant gagne avec main sur le totem
                 else if (lastRevealedCard.card == 'H') {
                     Player looser = lstLoosers.get(0); // normally there should be a single player in lstLoosers list
                     resultMsg = resultMsg + "He gives his cards and those under totem to "+looser.name+".\n";
@@ -417,24 +418,24 @@ class Party {
                         Player p = players.get(i);
                         if (i < lstLoosers.size()-1) {
                             p.takeCards(winnerPack.takeXFirst(nb));
-                            resultMsg = resultMsg + p.name + " lost his a duel with "+turnWinner.name+". He takes " + nb + "cards.\n";
+                            resultMsg = resultMsg + p.name + " perd le duel contre "+turnWinner.name+". Il prend " + nb + "cartes.\n";
                         }
                         else {
                             p.takeCards(winnerPack.getAll());
-                            resultMsg = resultMsg + p.name + " lost his a duel with "+turnWinner.name+". He takes " + winnerPack.size() + "cards.\n";
+                            resultMsg = resultMsg + p.name + " perd le duel contre  "+turnWinner.name+". Il prend " + winnerPack.size() + "cartes.\n";
                         }
                     }
                 }
-                // now check if someone has won
+                // Verifier si quelqu'un à gagné
                 for(Player p :players) {
                     if (p.hasWon()) {
-                        resultMsg = resultMsg + p.name + " wins the party";
+                        resultMsg = resultMsg + p.name + " gagne la partie";
                         setCurrentState(PARTY_END);
                         return;
                     }
                 }
                 playerOfNextTurn = lstLoosers.get(loto.nextInt(lstLoosers.size()));
-                resultMsg = resultMsg + "Next player: "+ playerOfNextTurn.name;
+                resultMsg = resultMsg + "Joueur suivant : "+ playerOfNextTurn.name;
             }
         }
         System.out.println("-------------------------------------------------------------------");

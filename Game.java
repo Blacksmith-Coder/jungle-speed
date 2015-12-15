@@ -59,23 +59,26 @@ class Game {
     }
 
     public synchronized boolean playerJoinParty(Player player, Party party) {
+        // si le player n'est pas dans players, renvoyer false
         if (!players.contains(player)){
             return false;
         }
 
+        // si la party n'est pas dans parties, renvoyer false
         if (!parties.contains(party)){
             return false;
         }
 
+        // si l'id player == -1 (i.e. le joueur est déjà dans une partie), renvoyer false
         if (player.id == -1){
             return false;
-        } else {
+        }
+
+        // sinon, ajouter player à party
+        else {
             party.players.add(player);
         }
-        // si le player n'est pas dans players, renvoyer false
-        // si la party n'est pas dans parties, renvoyer false
-        // si l'id player == -1 (i.e. le joueur est déjà dans une partie), renvoyer false
-        // sinon, ajouter player à party
+
         return true;
     }
 }
