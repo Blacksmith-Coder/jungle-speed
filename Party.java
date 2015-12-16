@@ -1,4 +1,4 @@
-//En cour de finition
+//KASI FINI !!!
 
 import java.util.*;
 
@@ -161,7 +161,7 @@ class Party {
             nbPlayerInTurn = 0;
             currentPlayer = playerOfNextTurn;
             initNewTurn();
-            commenceTour.put(nbrJoueurs); //semaphore
+            commenceTour.put(1); //semaphore
         }
 
         // prendre un jeton dans le sémaphore
@@ -287,6 +287,7 @@ class Party {
        ACT_NOP: ne rien faire
        ACT_TAKETOTEM: prendre totem
        ACT_HANDTOTEM: main sur le totem
+       ACT_INCORRECT : acte invalide
 
        retrun true si dernier thread à effectuer integratePlayerOrder
      */
