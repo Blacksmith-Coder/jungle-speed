@@ -95,10 +95,10 @@ class ThreadServer extends Thread {
             }
         }
         catch(IllegalRequestException e) {
-            System.err.println("client sent an illegal request: "+e.getMessage());
+            System.err.println("Le client à envoyé une requête illégale: "+e.getMessage());
         }
         catch(IOException e) {
-            System.err.println("pb with client connection: "+e.getMessage());
+            System.err.println("Problème de connection avec le Client : "+e.getMessage());
         }
         // NB : si on arrive ici, c'est qu'il y a eu déconnexion ou erreur de requête
 

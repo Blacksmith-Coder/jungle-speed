@@ -16,6 +16,11 @@ class Party {
     public final static int RES_NULL = 0; // Représente le fait que rien n'arrive à un joueur pendant le tour actuel
     public final static int RES_WIN = 1; // Représente le fait qu'un joueur ait gagné le tour actuel
 
+    public final static int ACT_NOP = 0; //Ne rien faire
+    public final static int ACT_TAKETOTEM = 1; // Prendre le totem
+    public final static int ACT_HANDTOTEM = 2; // Main sur le totem
+
+
     String name; //Le nom de la partie
     Player creator; // Le créateur
     int nbJoueursNecessaire; // Le nombre de joueurs convenu pour la partie
@@ -80,9 +85,9 @@ class Party {
          si other n'est pas déjà dans cette partie & nbdejoueurs < nbjoueursnécessaires :
          alors  ajouter other à players
           */
-        for (Player test :  players) {
+
             List<Card> distri = new ArrayList<>();
-            if (!test.equals(other) && this.nbrJoueurs < nbJoueursNecessaire) {
+            if (!players.contains(other) && this.nbrJoueurs < nbJoueursNecessaire) {
 
                 this.nbrJoueurs++; //On incrémente le nbr de joueur de la partie
 
@@ -107,7 +112,7 @@ class Party {
                 notifyAll();
             }
         }
-    }
+
 
     public synchronized boolean removePlayer(Player other) {
 
@@ -160,11 +165,11 @@ class Party {
             nbPlayerInTurn = 0;
             currentPlayer = playerOfNextTurn;
             initNewTurn();
-            commenceTour.put(nbrJoueurs);
+            commenceTour.put(nbrJoueurs); //semaphore
         }
 
         // prendre un jeton dans le sémaphore
-        commenceTour.put(1);
+        commenceTour.get();
     }
 
     private synchronized void initNewTurn() {
@@ -222,7 +227,7 @@ class Party {
         List<Card> unelist = list.getAll();
         String chaine = "";
         for (Card carte :  unelist) {
-            chaine += carte.card;
+            chaine += carte.card + ", ";
         }
         Object s = chaine;
         return s;
@@ -269,38 +274,46 @@ class Party {
         return false;
     }
 
-    /* NB : result values are :
-       RES_ERROR: a player made an error (see below)
-       RES_LOST: a player lost because he didn't take the totem while he should
-       RES_NULL: a player took the good decision but is not the faster
-       RES_WIN: a player has win the turn
+    /*
+        Les valeurs de résultats sont:
+        RES_ERROR: un joueur fait une erreur (voir ci-dessous)
+        RES_LOST: un joueur a perdu parce qu'il n'a pas pris le totem alors qu'il devrait
+        RES_NULL: un joueur a pris la bonne décision, mais n'est pas le plus rapide
+        RES_WIN: un joueur a gagné le tour
 
-       error cases are the following :
-       - a player does nothing while the last revealed card is 'hand on totem'
-       - a player takes the totem while the last revealed card is 'hand on totem'
-       - a player puts his hand on the totem while the last revealed card is 'take totem'
-       - a player takes the totem while he hasn't the same card than another player and the last revealed is != 'H' or 'T'
+       Les cas d'erreurs sont les suivants:
+        - Un joueur ne fait rien alors que la dernière carte révélée est «la main sur totem
+        - Un joueur prend le totem tandis que la dernière carte révélée est «la main sur totem
+        - Un joueur pose sa main sur le totem tandis que la dernière carte révélée est «prendre totem
+        - Un joueur prend le totem alors qu'il n'a pas la même carte à un autre joueur et le dernier est révélé = 'H' ou 'T'!
 
-       NB: order values are :
+       Signification des ordres
        ACT_NOP: do nothing
        ACT_TAKETOTEM: take totem
        ACT_HANDTOTEM: hand on totem
 
-       reutrned value : true if i'am the last thread to integrate the player order
+       retrun true si dernier thread à effectuer integratePlayerOrder
      */
 
     public synchronized boolean integratePlayerOrder(Player player, int order) {
 
         played.add(player);
 
-        /* NOTE : qq soit la valeur de order, il faut déterminer le résultat de l'action
+        /*
+           Quelque soit la valeur de order, il faut déterminer le résultat de l'action
            de player et ajouter celui-ci dans la list result.
            Ainsi, comme played et result sont remplis en même temps, on peut retrouver faiclement le résultat de chaque joueur.
         */
 
         // si dernière carte révélée == H
+        if (lastRevealedCard.card == 'H') {
+            // si ordre == ACT_NOP -> le joueur a fait une erreur
+            if (order == ACT_NOP ) {
+                player.
+            }
+        }
 
-        //    si ordre == ACT_NOP -> le joueur a fait une erreur
+
         //    sinon si ordre == ACT_TAKETOTEM -> le joueur a fait une erreur
         //    sinon si ordre == ACT_HANDTOTEM
         //       si le totem n'a pas encore de main posé dessus
@@ -348,8 +361,8 @@ class Party {
 
     public synchronized void analyseResults() {
 
-        List<Player> lstErrors = new ArrayList<Player>(); // list of players that made an error this turn
-        List<Player> lstLoosers = new ArrayList<Player>(); // list of players that lost (not an error) this turn
+        List<Player> lstErrors = new ArrayList<Player>(); // liste des joueurs qui ont fait une erreur ce tour
+        List<Player> lstLoosers = new ArrayList<Player>(); // liste des joueurs qui ont perdu ce tour
         Player turnWinner = null;
 
         for(int i=0;i< nbrJoueurs;i++) {
@@ -361,12 +374,13 @@ class Party {
             }
         }
 
-        // if some players made an error
+        // Si des joueurs ont fait une erreur.
         if (!lstErrors.isEmpty()) {
-            /* whatever the case, players that made an error are the ultimate loosers:
-	           - collect all revealed cards
-	           - add those under the totem
-	           - distribute them among loosers
+            /*
+            * Quel que soit le cas, les joueurs qui ont fait une erreur sont les perdants ultimes:
+            *   - Collecter toutes les cartes révélées
+            *   - Ajouter ceux sous le totem
+            *   - Répartir entre loosers
             */
             CardPacket errorPack = getAllRevealedCards();
 
