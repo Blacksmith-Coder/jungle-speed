@@ -16,10 +16,6 @@ class Party {
     public final static int RES_NULL = 0; // Représente le fait que rien n'arrive à un joueur pendant le tour actuel
     public final static int RES_WIN = 1; // Représente le fait qu'un joueur ait gagné le tour actuel
 
-    public final static int ACT_NOP = 0; //Ne rien faire
-    public final static int ACT_TAKETOTEM = 1; // Prendre le totem
-    public final static int ACT_HANDTOTEM = 2; // Main sur le totem
-
 
     String name; //Le nom de la partie
     Player creator; // Le créateur
@@ -227,7 +223,7 @@ class Party {
         List<Card> unelist = list.getAll();
         String chaine = "";
         for (Card carte :  unelist) {
-            chaine += carte.card + ", ";
+            chaine += carte.card;
         }
         Object s = chaine;
         return s;
@@ -288,9 +284,9 @@ class Party {
         - Un joueur prend le totem alors qu'il n'a pas la même carte à un autre joueur et le dernier est révélé = 'H' ou 'T'!
 
        Signification des ordres
-       ACT_NOP: do nothing
-       ACT_TAKETOTEM: take totem
-       ACT_HANDTOTEM: hand on totem
+       ACT_NOP: ne rien faire
+       ACT_TAKETOTEM: prendre totem
+       ACT_HANDTOTEM: main sur le totem
 
        retrun true si dernier thread à effectuer integratePlayerOrder
      */
@@ -300,57 +296,121 @@ class Party {
         played.add(player);
 
         /*
-           Quelque soit la valeur de order, il faut déterminer le résultat de l'action
-           de player et ajouter celui-ci dans la list result.
-           Ainsi, comme played et result sont remplis en même temps, on peut retrouver faiclement le résultat de chaque joueur.
+           Quelque soit la valeur de order, il faut déterminer le résultat
+           de l'action de player et ajouter celui-ci dans la list result.
+           Ainsi, comme played et result sont remplis en même temps,
+           on peut retrouver faiclement le résultat de chaque joueur.
         */
 
         // si dernière carte révélée == H
         if (lastRevealedCard.card == 'H') {
+
             // si ordre == ACT_NOP -> le joueur a fait une erreur
-            if (order == ACT_NOP ) {
-                player.
+
+            if (order == JungleServer.ACT_NOP ) {
+                result.add(RES_ERROR);
+            }
+
+            // sinon si ordre == ACT_TAKETOTEM -> le joueur a fait une erreur
+            else if (order == JungleServer.ACT_TAKETOTEM) {
+                result.add(RES_ERROR);
+            }
+
+            // sinon si ordre == ACT_HANDTOTEM
+            else if (order == JungleServer.ACT_HANDTOTEM) {
+                // si le totem n'a pas encore de main posé dessus
+                if (!totemHand) {
+                    result.add(RES_WIN); // Le joueur gagne
+                    totemHand = true; // Mise à jour totemHand
+                } else {
+                    // si this == dernier à jouer
+                    if (played.size() == nbrJoueurs) {
+                        result.add(RES_LOST);
+                    } else {
+                        result.add(RES_NULL);
+                    }
+                }
+            } else {
+                // sinon le joueur a fait une erreur
+                result.add(JungleServer.ACT_INCORRECT); // ordre invalide
             }
         }
 
-
-        //    sinon si ordre == ACT_TAKETOTEM -> le joueur a fait une erreur
-        //    sinon si ordre == ACT_HANDTOTEM
-        //       si le totem n'a pas encore de main posé dessus
-        //          le joueur est gagnant
-        //          mettre à jour totemHand
-        //       sinon
-        //          si je suis le dernier à jouer (i.e. taille de played == nb joueurs dans partie)
-        //             joueur a perdu
-        //          sinon rien n'arrive au joueur
-        //       fsi
-        //    sinon le joueur a fait une erreur (i.e. un ordre invalide)
-
         // sinon si dernière carte révélée == T
-        //    si ordre == ACT_NOP -> le joueur a perdu
-        //    sinon si ordre == ACT_TAKETOTEM
-        //       si le totem n'est pas encore pris
-        //          le joueur est gagnant
-        //          mettre à jour totemTaken
-        //       sinon rien n'arrive au joueur
-        //       fsi
-        //    sinon si ordre == ACT_HANDTOTEM -> le joueur a fait une erreur
-        //    sinon le joueur a fait une erreur (i.e. un ordre invalide)
+        else if (lastRevealedCard.card == 'T') {
 
-        // sinon (.ie. dernière carte révélée est normale)
-        //    si ordre == ACT_NOP
-        //       si le joueur a même carte que d'autres -> le joueur a perdu
-        //       sinon rien n'arrive au joueur
-        //    sinon si ordre == ACT_TAKETOTEM
-        //       si le joueur a même carte que d'autres
-        //          si le totem n'est pas encore pris
-        //             le joueur est gagnant
-        //             mettre à jour totemTaken
-        //          sinon le joueur est perdant
-        //       sinon le joueur a fait une erreur
-        //    sinon si ordre == ACT_HANDTOTEM -> le joueur a fait une erreur
-        //    sinon le joueur a fait une erreur (i.e. un ordre invalide)
-        // fsi
+            // si ordre == ACT_NOP -> le joueur a perdu
+            if (order == JungleServer.ACT_NOP) {
+                result.add(RES_LOST);
+            }
+
+            // sinon si ordre == ACT_TAKETOTEM
+            else if (order == JungleServer.ACT_TAKETOTEM) {
+
+                // si le totem n'est pas encore pris
+                if (!totemTaken) {
+                    result.add(RES_WIN);
+                    totemTaken = true;
+                }
+
+                // sinon rien n'arrive au joueur
+                else {
+                    result.add(RES_NULL);
+                }
+            }
+
+            // sinon si ordre == ACT_HANDTOTEM -> le joueur a fait une erreur
+            else if (order == JungleServer.ACT_HANDTOTEM) {
+                result.add(RES_ERROR);
+            }
+
+            // sinon le joueur a fait une erreur
+            else {
+                result.add(JungleServer.ACT_INCORRECT); // ordre invalide
+            }
+
+        } else {
+
+            // si ordre == ACT_NOP
+            if (order == JungleServer.ACT_NOP) {
+
+                // si le joueur a même carte que d'autres -> le joueur a perdu
+                if (checkSameCards(player)) {
+                    result.add(RES_LOST);
+                } else {
+                    result.add(RES_NULL);
+                }
+            }
+
+            // sinon si ordre == ACT_TAKETOTEM
+            else if (order == JungleServer.ACT_TAKETOTEM) {
+
+                // si le joueur a même carte que d'autres
+                if (checkSameCards(player)) {
+
+                    // si le totem n'est pas encore pris
+                    if (!totemTaken) {
+                        result.add(RES_WIN); // le joueur est gagnant
+                        totemTaken = true; // mise à jour
+                    } else {
+                        result.add(RES_LOST);
+                    }
+                } else {
+                   // sinon le joueur a fait une erreur
+                    result.add(RES_ERROR);
+                }
+            }
+
+            // sinon si ordre == ACT_HANDTOTEM -> le joueur a fait une erreur
+            else if (order == JungleServer.ACT_HANDTOTEM) {
+                result.add(RES_ERROR);
+            }
+
+            // sinon le joueur a fait une erreur
+            else {
+                result.add(JungleServer.ACT_INCORRECT); // ordre invalide
+            }
+        }
 
         if (played.size() >= nbrJoueurs) {
             setCurrentState(PARTY_ONGOING);
@@ -389,10 +449,10 @@ class Party {
                 Player p = lstErrors.get(i);
                 if (i < lstErrors.size()-1) {
                     p.takeCards(errorPack.takeXFirst(nb));
-                    resultMsg = resultMsg + p.name + " made an error: he takes " + nb + "cards from all players.\n";
+                    resultMsg = resultMsg + p.name + " a fait une erreur, il prend " + nb + " cartes à tous les autres joueurs.\n";
                 }
                 else {
-                    resultMsg = resultMsg + p.name + " made an error: he takes " + errorPack.size() + "cards from all players.\n";
+                    resultMsg = resultMsg + p.name + " a fait une erreur, il prend " + errorPack.size() + " cartes à tous les autres joueurs.\n";
                     p.takeCards(errorPack.getAll());
                 }
             }

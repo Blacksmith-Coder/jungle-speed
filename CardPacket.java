@@ -76,6 +76,11 @@ class CardPacket {
         return cards.remove(0);
     }
 
+
+    /**
+     * Bat les cartes en prenant une carte au hasard (comprise dans la taille du
+     * paquet de carte et en la remmettant au bout du paquet.
+     */
     public void shuffle() {
         int index;
         for(int i=0;i<200;i++) {
@@ -85,6 +90,12 @@ class CardPacket {
         }
     }
 
+    /**
+     * Prend les X premières carte du paquet instancié
+     * et return la liste des cartes.
+     * @param nb
+     * @return
+     */
     public List<Card> takeXFirst(int nb) {
         List<Card> heap = new ArrayList<Card>();
         Card c;
