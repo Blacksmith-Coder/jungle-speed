@@ -1,4 +1,4 @@
-//KASI FINI !!!
+//FINI
 
 import java.util.*;
 
@@ -261,13 +261,25 @@ class Party {
         return packet;
     }
 
+    /**
+     * Méthode pour controler si des joueurs on la même carte visible.
+     * @param p
+     * @return
+     */
     private boolean checkSameCards(Player p) {
         boolean same = false;
         // si p != null
-        //   same = true si la carte visible de p est la même qu'un autre joueur et false sinon
-        //   ATTENTION : certains joueurs (dont p) n'ont peut être pas de carte visible
-
-        return false;
+        if (p != null) {
+            for (Player other :  played) {
+                // same = true si la carte visible de p est la même qu'un autre joueur et false sinon
+                if (p.revealCard().equals(other.revealCard())) {
+                    same = true;
+                } else {
+                    same = false;
+                }
+            }
+        }
+        return same;
     }
 
     /*
@@ -457,7 +469,7 @@ class Party {
                     p.takeCards(errorPack.getAll());
                 }
             }
-            // now check if someone has won
+            // verifier si quelqu'un a gagné.
             for(Player p :players) {
                 if (p.hasWon()) {
                     resultMsg = resultMsg + p.name + " wins the party";
@@ -468,7 +480,7 @@ class Party {
             playerOfNextTurn = lstErrors.get(loto.nextInt(lstErrors.size()));
             resultMsg = resultMsg + "Next player: "+ playerOfNextTurn.name;
         }
-        // else if no player made an error
+        // sinon si aucun joueur n'a fait d'erreur
         else {
 
             int indexWinner = -1;
@@ -503,9 +515,9 @@ class Party {
                     CardPacket winnerPack = getWinnerRevealedCards(turnWinner);
                     looser.takeCards(winnerPack.getAll());
                 }
-                // if winner wins because he has the same card than some other players
+                // si le gagnant gagne parce qu'il a la même carte que certains autres joueurs
                 else {
-                    // distribute winner's revealed card to loosers
+                    // distribuer la carte révélée du gagnant au perdant
                     CardPacket winnerPack = getWinnerRevealedCards(turnWinner);
                     int nb = (winnerPack.size()+1) / lstLoosers.size();
                     for(int i=0;i<lstLoosers.size();i++) {

@@ -1,6 +1,4 @@
-/* NOTE :
-  Cette classe est incomplète : les commentaires sont là pour vous guider
- */
+//FINI
 
 import java.util.*;
 import java.io.*;
@@ -25,34 +23,80 @@ class ThreadClient extends Thread {
         boolean stop = false;
 
         try {
+
             // recevoir booléen qui signale que le serveur est prêt
-            // envoyer requête "attendre début partie"
-            // recevoir mon id dans la partie
+            stop = ois.readBoolean();
+
+            // recevoir booléen qui signale que le serveur est prêt
+            oos.writeInt(JungleServer.REQ_WAITPARTYSTARTS);
+
+            // recevoir l'id pour la partie
+            int idJoueur = ois.readInt();
+
 
             while (!stop) {
 
                 // envoyer requête "attendre début tour"
+                oos.writeInt(JungleServer.REQ_WAITTURNSTARTS);
+
                 // recevoir id joueur courant
+                int idJoueurCourant = ois.readInt();
+
                 // si id joueur courant < 0, arreter thread
-                // sinon si id joueur courant == mon id : afficher message dans ig du type "c'est mon tour"
-                // sinon afficher message dans ig du type "c'est le tour de X"
+                if (idJoueurCourant < 0) {
+                    interrupt();
+
+
+                }
+                // sinon si id joueur courant == mon id : afficher message dans ig
+                else if (idJoueurCourant == idJoueur) {
+                    ig.textInfoParty.add(new JLabel("C'est votre tour"));
+                } else {
+                    ig.textInfoParty.add(new JLabel("C'est au tour de " + idJoueur));
+                }
 
                 // recevoir la liste des cartes visibles et les afficher dans l'ig
-                // débloquer le champ de saisie+bouton jouer
-                // attendre 3s
-                // bloquer le champ de saisie+bouton jouer
+                String visibles = (String) ois.readObject();
+                ig.textInfoParty.add(new JLabel(visibles));
 
-                // si pas d'rodre envoyé pdt les 3s
-                //    envoyer requête PLAY avec comme paramètre chaîne vide
+                // débloquer le champ de saisie + bouton jouer
+                ig.textPlay.setEnabled(true);
+                ig.butPlay.setEnabled(true);
+
+                // attendre 3s
+                wait(3000);
+
+
+                boolean ordre = ig.orderSent;
+
+                // bloquer le champ de saisie+bouton jouer
+                ig.textPlay.setEnabled(false);
+                ig.butPlay.setEnabled(false);
+
+                // si pas d'odre envoyé pdt les 3s
+                if (!ordre) {
+
+                    // envoyer requête PLAY avec comme paramètre chaîne vide
+                    oos.writeInt(JungleServer.REQ_PLAY);
+                    oos.writeObject("");
+                }
 
                 // recevoir résultat du tour et l'afficher dans l'IG
-                // recevoir booléen = true si partie finie, false sinon
-            }
-        }
-        catch(IOException e) {}
-        catch(ClassNotFoundException e) {}
-	JOptionPane.showMessageDialog(null, "Party is over. Return to main panel");
-	ig.setInitPanel();
-    }
+                String resultTour = (String) ois.readObject();
+                ig.textInfoParty.append(resultTour);
 
+                // recevoir booléen = true si partie finie, false sinon
+                stop = ois.readBoolean();
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JOptionPane.showMessageDialog(null, "Partie terminée, retour au menu.");
+        ig.setInitPanel();
+    }
 }

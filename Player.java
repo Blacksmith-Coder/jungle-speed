@@ -1,6 +1,4 @@
-/* NOTE :
-  Cette classe est incomplète : les commentaires sont là pour vous guider
- */
+//FINI
 
 import java.util.*;
 
@@ -35,13 +33,16 @@ class Player {
     }
 
     public Card currentCard() {
+        // si le tas révélé est vide renovyer null
         if (revealedCards.isEmpty()){
             return null;
-        } else {
+        }
+        // sinon renvoyer la première carte du tas révélé
+        else {
             return revealedCards.get(0);
         }
-        // si le tas révélé est vide renovyer null
-        // sinon renvoyer la première carte du tas révélé
+
+
     }
 
     public void takeCards(List<Card> heap) {
@@ -57,14 +58,17 @@ class Player {
 
     public List<Card> giveRevealedCards() {
         List<Card> cards = new ArrayList<Card>();
+        // mettre toutes les cartes du tas révélé dans cards
         for (Card c: revealedCards.cards){
             cards.add(c);
         }
-        revealedCards.clear();
-        return cards;
-        // mettre toutes les cartes du tas révélé dans cards
         // vider le tas révélé
+        revealedCards.clear();
         // renvoyer cards
+        return cards;
+
+
+
     }
 
     public boolean hasWon() {
