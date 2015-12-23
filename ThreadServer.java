@@ -181,11 +181,6 @@ class ThreadServer extends Thread {
         int idReq;
 
         while (true) {
-
-            if (currentParty.state == 3) {
-                return;
-            }
-
             // recevoir n° requete
             idReq = ois.readInt();
 
@@ -273,7 +268,7 @@ class ThreadServer extends Thread {
         return rep;
     }
 
-    public void requestWaitPartyStarts() throws IOException, IllegalRequestException {
+    public void requestWaitPartyStarts() throws IOException, IllegalRequestException, InterruptedException {
 
         currentParty.waitForPartyStarts();
         oos.writeInt(player.id);
