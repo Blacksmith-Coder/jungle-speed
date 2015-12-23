@@ -25,11 +25,6 @@ class JungleServer {
         int port = 12345;
         ThreadServer t = null;
 
-        if (args.length != 1) {
-            System.out.println("usage: JungleServer");
-            System.exit(1);
-        }
-
         try {
             conn = new ServerSocket(port);
         }
