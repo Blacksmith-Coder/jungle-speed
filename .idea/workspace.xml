@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="68e5ad07-b856-47b5-8f9d-6b1bf611170a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/JungleIG.java" afterPath="$PROJECT_DIR$/JungleIG.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Party.java" afterPath="$PROJECT_DIR$/Party.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Player.java" afterPath="$PROJECT_DIR$/Player.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ThreadServer.java" afterPath="$PROJECT_DIR$/ThreadServer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -48,8 +45,8 @@
       <file leaf-file-name="ThreadServer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ThreadServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.8238342">
-              <caret line="84" column="16" selection-start-line="84" selection-start-column="16" selection-end-line="84" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -579,7 +576,7 @@
       <workItem from="1450255105711" duration="667000" />
       <workItem from="1450296472222" duration="10373000" />
       <workItem from="1450351076814" duration="295000" />
-      <workItem from="1450821247757" duration="7167000" />
+      <workItem from="1450821247757" duration="7210000" />
     </task>
     <task id="LOCAL-00001" summary="ajout de test">
       <created>1450048681608</created>
@@ -713,11 +710,17 @@
       <option name="project" value="LOCAL" />
       <updated>1450825621813</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="change">
+      <created>1450829254238</created>
+      <option name="number" value="00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1450829254238</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43536000" />
+    <option name="totallyTimeSpent" value="43579000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="52" width="1305" height="716" extended-state="0" />
@@ -1186,8 +1189,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ThreadServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.8238342">
-          <caret line="84" column="16" selection-start-line="84" selection-start-column="16" selection-end-line="84" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
           <folding />
         </state>
       </provider>

@@ -1,4 +1,4 @@
-//Terminer les exceptions
+//FINI
 
 import java.util.*;
 import java.io.*;
