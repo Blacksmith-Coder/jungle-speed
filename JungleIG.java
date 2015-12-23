@@ -56,7 +56,9 @@ class JungleIG extends JFrame implements ActionListener {
     public void createWidget() {
 
         panConn = createPanelConnect();
+        panConn.setSize(new Dimension(350, 100));
         panInit = createPanelInit();
+        panInit.setPreferredSize(new Dimension(1200, 300));
         panParty = createPanelPlay();
 
         setContentPane(panConn);
@@ -67,21 +69,21 @@ class JungleIG extends JFrame implements ActionListener {
         JPanel panAll = new JPanel(new BorderLayout());
 
         JPanel panPseudo = new JPanel();
-        textPseudo = new JTextField("",20);
+        textPseudo = new JTextField("", 20);
         textPseudo.setMaximumSize(textPseudo.getPreferredSize());
         panPseudo.add(new JLabel("Pseudo: "));
         panPseudo.add(textPseudo);
 
         JPanel panConn = new JPanel();
-        textServerIP = new JTextField("127.0.0.1",15);
+        textServerIP = new JTextField("127.0.0.1", 15);
         panConn.add(new JLabel("Server IP: "));
         panConn.add(textServerIP);
 
         butConnect = new JButton("Connect");
         butConnect.addActionListener(this);
 
-        panAll.add(panPseudo,BorderLayout.NORTH);
-        panAll.add(panConn,BorderLayout.CENTER);
+        panAll.add(panPseudo, BorderLayout.NORTH);
+        panAll.add(panConn, BorderLayout.CENTER);
         panAll.add(butConnect, BorderLayout.SOUTH);
 
         return panAll;
@@ -97,11 +99,11 @@ class JungleIG extends JFrame implements ActionListener {
 
         JPanel panCreate = new JPanel();
         panCreate.setLayout(new BoxLayout(panCreate, BoxLayout.X_AXIS));
-        textCreate = new JTextField("",40);
+        textCreate = new JTextField("", 40);
         textCreate.setMaximumSize(textCreate.getPreferredSize());
         butCreateParty = new JButton("Create party");
         butCreateParty.addActionListener(this);
-        SpinnerModel model = new SpinnerNumberModel(3, 2, 8 , 1);
+        SpinnerModel model = new SpinnerNumberModel(3, 2, 8, 1);
         spinNbPlayer = new JSpinner(model);
         spinNbPlayer.setMaximumSize(spinNbPlayer.getPreferredSize());
         panCreate.add(new JLabel("new party name: "));
@@ -113,7 +115,7 @@ class JungleIG extends JFrame implements ActionListener {
 
         JPanel panJoin = new JPanel();
         panJoin.setLayout(new BoxLayout(panJoin, BoxLayout.X_AXIS));
-        textJoin = new JTextField("",2);
+        textJoin = new JTextField("", 2);
         textJoin.setMaximumSize(textJoin.getPreferredSize());
         butJoinParty = new JButton("Join party");
         butJoinParty.addActionListener(this);
@@ -127,10 +129,10 @@ class JungleIG extends JFrame implements ActionListener {
         panRight.add(Box.createVerticalGlue());
 
 
-        textInfoInit = new JTextArea(20,100);
+        textInfoInit = new JTextArea(20, 100);
         textInfoInit.setLineWrap(true);
 
-        JScrollPane scroll = new JScrollPane (textInfoInit,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        JScrollPane scroll = new JScrollPane(textInfoInit, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         JPanel panAll = new JPanel();
         panAll.setLayout(new BoxLayout(panAll, BoxLayout.X_AXIS));
         panAll.add(scroll);
@@ -143,12 +145,12 @@ class JungleIG extends JFrame implements ActionListener {
 
         JPanel panAll = new JPanel(new BorderLayout());
 
-        textInfoParty = new JTextArea(20,100);
+        textInfoParty = new JTextArea(20, 100);
         textInfoParty.setLineWrap(true);
-        JScrollPane scroll = new JScrollPane (textInfoParty,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        JScrollPane scroll = new JScrollPane(textInfoParty, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         JPanel panPlay = new JPanel();
-        textPlay = new JTextField("",5);
+        textPlay = new JTextField("", 5);
         textPlay.setMaximumSize(textPlay.getPreferredSize());
         butPlay = new JButton("Play");
         butPlay.addActionListener(this);
@@ -156,7 +158,7 @@ class JungleIG extends JFrame implements ActionListener {
         panPlay.add(textPlay);
         enableOrder(false);
         JPanel panRight = new JPanel(new BorderLayout());
-        panRight.add(panPlay,BorderLayout.CENTER);
+        panRight.add(panPlay, BorderLayout.CENTER);
         panRight.add(butPlay, BorderLayout.SOUTH);
 
         JPanel panMain = new JPanel();
@@ -166,8 +168,8 @@ class JungleIG extends JFrame implements ActionListener {
         butQuit = new JButton("quit");
         butQuit.addActionListener(this);
 
-        panAll.add(panMain,BorderLayout.CENTER);
-        panAll.add(butQuit,BorderLayout.SOUTH);
+        panAll.add(panMain, BorderLayout.CENTER);
+        panAll.add(butQuit, BorderLayout.SOUTH);
 
         return panAll;
     }
@@ -204,7 +206,7 @@ class JungleIG extends JFrame implements ActionListener {
 
         boolean ok = false;
         // créer la connexion au serveur, ainsi que les flux uniquement si elle n'est pas active
-        if(comm == null){
+        if (comm == null) {
             try {
                 comm = new Socket(textServerIP.getText(), 12345);
 
@@ -215,9 +217,8 @@ class JungleIG extends JFrame implements ActionListener {
                 oos.writeObject(textPseudo.getText());
                 // lire un booléen -> ok
                 ok = true;
-            }
-            catch(IOException e) {
-                System.out.println("problème de connexion au serveur : "+e.getMessage());
+            } catch (IOException e) {
+                System.out.println("problème de connexion au serveur : (JungleIG)" + e.getMessage());
                 System.exit(1);
             }
         }
@@ -232,89 +233,92 @@ class JungleIG extends JFrame implements ActionListener {
                 boolean ok = serverConnection();
                 if (ok) {
                     setInitPanel();
+                } else {
+                    System.out.println("Le pseudo existe déjà, choisissez en un autre.");
                 }
-                else {
-                    System.out.println("pseudo is already taken. Choose another one and try again.");
-                }
-            }
-            catch(IOException err) {
-                System.err.println("pb with the connection to server: "+err.getMessage()+"\n.Aborting...");
+            } catch (IOException err) {
+                System.err.println("Problème de connection avec le serveur: " + err.getMessage() + "\n.Arrêt...");
                 System.exit(1);
             }
-        }
-        else if (e.getSource() == butListParty) {
+        } else if (e.getSource() == butListParty) {
             try {
-                oos.writeInt(1);
-                oos.flush();
-                String nomParty = (String) ois.readObject();
-                textInfoInit.append(nomParty);
                 // envoyer requête LIST PARTY
-                // recevoir résultat et l'afficher dans textInfoInit
+                oos.writeInt(JungleServer.REQ_LISTPARTY);
+                oos.flush();
 
-            }
-            catch(ClassNotFoundException err ) {}
-            catch(IOException err) {
-                System.err.println("pb with the connection to server: "+err.getMessage()+"\n.Aborting...");
+                // recevoir résultat et l'afficher dans textInfoInit
+                System.out.println("flush");
+                boolean pret = ois.readBoolean();
+                System.out.println(pret);
+                if (pret) {
+                    String nomParty = (String) ois.readObject();
+                    System.out.println("apres read");
+                    textInfoInit.append(nomParty);
+                }
+
+            } catch (ClassNotFoundException err) {
+            } catch (IOException err) {
+                System.err.println("Problème de connection avec le serveur: " + err.getMessage() + "\n.Arrêt...");
                 System.exit(1);
             }
 
-        }
-        else if (e.getSource() == butCreateParty) {
+        } else if (e.getSource() == butCreateParty) {
             try {
                 boolean ok;
-                oos.writeInt(2);
+                // envoyer requête CREATE PARTY (paramètres : nom partie et nb joueurs nécessaires)
+                oos.writeInt(JungleServer.REQ_CREATEPARTY);
                 oos.writeObject(textCreate.getText());
-                int nbJoueurs= (int) spinNbPlayer.getValue();
+                int nbJoueurs = (int) spinNbPlayer.getValue();
                 oos.writeInt(nbJoueurs);
                 oos.flush();
-                ok = ois.readBoolean();
-                if (ok){
-                    setPartyPanel();
-                    textInfoParty.append("Attendre le début de la partie");
-                    ThreadClient threadClient = new ThreadClient(this);
-                    threadClient.run();
-                }
-                // envoyer requête CREATE PARTY (paramètres : nom partie et nb joueurs nécessaires)
                 // recevoir résultat -> ok
+                ok = ois.readBoolean();
                 // si ok == true :
-                //    mettre le panneau party au centre
-                //    afficher un message dans textInfoParty comme quoi il faut attendre le début de partie
-                //    créer un ThreadClient et lancer son exécution
-            }
-            catch(IOException err) {
-                System.err.println("pb with the connection to server: "+err.getMessage()+"\n.Aborting...");
+                if (ok) {
+                    // mettre le panneau party au centre
+                    setPartyPanel();
+                    // afficher un message dans textInfoParty comme quoi il faut attendre le début de partie
+                    textInfoParty.append("Attendre le début de la partie");
+                    // créer un ThreadClient et lancer son exécution
+                    ThreadClient threadClient = new ThreadClient(this);
+                    threadClient.start();
+                }
+
+
+
+
+
+
+            } catch (IOException err) {
+                System.err.println("pb with the connection to server: " + err.getMessage() + "\n.Aborting...");
                 System.exit(1);
             }
-        }
-        else if (e.getSource() == butJoinParty) {
+        } else if (e.getSource() == butJoinParty) {
 
             try {
                 int idPlayer;
-                oos.writeInt(3);
+                // envoyer requête JOIN PARTY (paramètres : numero partie)
+                oos.writeInt(JungleServer.REQ_JOINPARTY);
                 int numPartie = Integer.parseInt(textJoin.getText());
                 oos.writeInt(numPartie);
                 oos.flush();
-                idPlayer = ois.readInt();
-                if (idPlayer >= 1){
-                    setPartyPanel();
-                    textInfoParty.append("Attendre la début de la partie");
-                    ThreadClient threadClient = new ThreadClient(this);
-                    threadClient.run();
-
-                }
-                // envoyer requête JOIN PARTY (paramètres : numero partie)
                 // recevoir résultat -> idPlayer
+                idPlayer = ois.readInt();
                 // si idPlayer >= 1 :
-                //    mettre le panneau party au centre
-                //    afficher un message dans textInfoParty comme quoi il faut attendre le début de partie
-                //    créer un ThreadClient et lancer son exécution
-            }
-            catch(IOException err) {
-                System.err.println("pb with the connection to server: "+err.getMessage()+"\n.Aborting...");
+                if (idPlayer >= 1) {
+                    // mettre le panneau party au centre
+                    setPartyPanel();
+                    // afficher un message dans textInfoParty comme quoi il faut attendre le début de partie
+                    textInfoParty.append("Attendre la début de la partie");
+                    // créer un ThreadClient et lancer son exécution
+                    ThreadClient threadClient = new ThreadClient(this);
+                    threadClient.start();
+                }
+            } catch (IOException err) {
+                System.err.println("pb with the connection to server: " + err.getMessage() + "\n.Aborting...");
                 System.exit(1);
             }
-        }
-        else if (e.getSource() == butPlay) {
+        } else if (e.getSource() == butPlay) {
             try {
                 oos.writeInt(6);
                 oos.writeObject(textPlay.getText());
@@ -325,21 +329,18 @@ class JungleIG extends JFrame implements ActionListener {
                 // envoyer requête PLAY (paramètre : contenu de textPlay)
                 // mettre orderSent à true
                 // bloquer le bouton play et le textfiled associé
-            }
-            catch(IOException err) {
-                System.err.println("pb with the connection to server: "+err.getMessage()+"\n.Aborting...");
+            } catch (IOException err) {
+                System.err.println("pb with the connection to server: " + err.getMessage() + "\n.Aborting...");
                 System.exit(1);
             }
-        }
-        else if (e.getSource() == butQuit) {
+        } else if (e.getSource() == butQuit) {
             try {
                 oos.close();
                 ois.close();
                 setConnectionPanel();
                 comm = null;
-            }
-            catch(IOException err) {
-                System.err.println("pb with the connection to server: "+err.getMessage()+"\n.Aborting...");
+            } catch (IOException err) {
+                System.err.println("pb with the connection to server: " + err.getMessage() + "\n.Aborting...");
                 System.exit(1);
             }
         }
