@@ -320,17 +320,18 @@ class JungleIG extends JFrame implements ActionListener {
             }
         } else if (e.getSource() == butPlay) {
             try {
-                oos.writeInt(6);
+                // envoyer requête PLAY (paramètre : contenu de textPlay)
+                oos.writeInt(JungleServer.REQ_PLAY);
                 oos.writeObject(textPlay.getText());
                 oos.flush();
                 orderSent = true;
                 butPlay.setEnabled(false);
                 textPlay.setEnabled(false);
-                // envoyer requête PLAY (paramètre : contenu de textPlay)
+
                 // mettre orderSent à true
                 // bloquer le bouton play et le textfiled associé
             } catch (IOException err) {
-                System.err.println("pb with the connection to server: " + err.getMessage() + "\n.Aborting...");
+                System.err.println("Problème connection serveur: " + err.getMessage() + "\n.Arrêt...");
                 System.exit(1);
             }
         } else if (e.getSource() == butQuit) {
@@ -340,7 +341,7 @@ class JungleIG extends JFrame implements ActionListener {
                 setConnectionPanel();
                 comm = null;
             } catch (IOException err) {
-                System.err.println("pb with the connection to server: " + err.getMessage() + "\n.Aborting...");
+                System.err.println("Problème connection serveur: " + err.getMessage() + "\n.Arrêt...");
                 System.exit(1);
             }
         }

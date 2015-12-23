@@ -39,16 +39,24 @@ class ThreadServer extends Thread {
             ois = new ObjectInputStream(comm.getInputStream());
             oos = new ObjectOutputStream(comm.getOutputStream());
 
-            while (!ok) { //Tant que c'est pas OK
+            while (!ok) {
+
+                //Tant que c'est pas OK
                 pseudo = (String) ois.readObject(); //On cherche à récupérer le pseudo
 
-                // On vérifie que pas de doublon pseudo.
-                for (Player p : game.players) {
-                    if (p.name.equals(pseudo)) {
-                        ok = false;
-                        break;
-                    } else {
-                        ok = true;
+                //Si c'est le créateur...
+                if (game.players.size() == 0) {
+                    //C'est ok d'emblée
+                    ok = true;
+                } else {
+                    // On vérifie que pas de doublon pseudo.
+                    for (Player p : game.players) {
+                        if (p.name.equals(pseudo)) {
+                            ok = false;
+                            break;
+                        } else {
+                            ok = true;
+                        }
                     }
                 }
 
@@ -57,11 +65,14 @@ class ThreadServer extends Thread {
 
                     //On crée un joueur si il n'existe pas.
                     player = new Player(pseudo);
+                    game.players.add(player);
                     //On prévient le client que c'est OK (true)
                     oos.writeBoolean(true);
+                    ok = true;
                 } else {
                     //Sinon on renvoie false au client
                     oos.writeBoolean(false);
+                    ok = true;
                 }
                 oos.flush();
 
@@ -148,18 +159,19 @@ class ThreadServer extends Thread {
             switch (idReq) {
                 case JungleServer.REQ_LISTPARTY:
                     requestListParty();
+                    stop = true;
                     break;
                 case JungleServer.REQ_CREATEPARTY:
                     requestCreateParty();
+                    stop = true;
                     break;
                 case JungleServer.REQ_JOINPARTY:
                     requestJoinParty();
+                    stop = true;
                     break;
                 default:
                     throw new IllegalRequestException("Requete illegale");
             }
-
-
             // sinon générer une exception IllegalRequest
         }
     }

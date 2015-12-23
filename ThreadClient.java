@@ -88,12 +88,11 @@ class ThreadClient extends Thread {
                 // recevoir booléen = true si partie finie, false sinon
                 stop = ois.readBoolean();
             }
-
+        } catch (IOException e) {
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         JOptionPane.showMessageDialog(null, "Partie terminée, retour au menu.");
