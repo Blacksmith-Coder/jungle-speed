@@ -23,13 +23,16 @@ class Player {
     }
 
     public Card revealCard() {
+        // enlever la première carte du tas caché
         Card c = hiddenCards.get(0);
         hiddenCards.removeFirst();
-        revealedCards.addFirst(c);
-        return c;
-        // enlever la première carte du tas caché
         // mettre cette carte en premier dans le tas révélé
+        revealedCards.addFirst(c);
         // renvoyer cette carte
+        return c;
+
+
+
     }
 
     public Card currentCard() {
@@ -46,14 +49,14 @@ class Player {
     }
 
     public void takeCards(List<Card> heap) {
-        hiddenCards.addCards(heap);
-        hiddenCards.addCards(revealedCards);
-        revealedCards.clear();
-        hiddenCards.shuffle();
         // ajouter heap au tas caché
+        hiddenCards.addCards(heap);
         // ajouter les cartes du tas révélé au tas caché
+        hiddenCards.addCards(revealedCards);
         // vider le tas révélé
+        revealedCards.clear();
         // mélanger le tas caché
+        hiddenCards.shuffle();
     }
 
     public List<Card> giveRevealedCards() {

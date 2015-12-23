@@ -1,7 +1,4 @@
-/* NOTE :
-  Cette classe est incomplète : les commentaires sont là pour vous guider
- */
-
+//FINI
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,18 +11,18 @@ import java.util.List;
 
 class JungleIG extends JFrame implements ActionListener {
 
-    /* attributes for communications */
+    /* attributs de communication */
     private Socket comm;
     public ObjectOutputStream oos;
     public ObjectInputStream ois;
 
-    /* widgets for connection panel */
+    /* panneau connection */
     protected JPanel panConn;
     protected JTextField textServerIP;
     protected JTextField textPseudo;
     protected JButton butConnect;
 
-    /* widgets for "before party" panel */
+    /* panneau avant partie */
     protected JPanel panInit;
     public JTextArea textInfoInit;
     protected JButton butListParty;
@@ -42,8 +39,10 @@ class JungleIG extends JFrame implements ActionListener {
     protected JButton butPlay;
     protected JButton butQuit;
 
-    /* others attributes */
-    public boolean orderSent; // set to false every time IG unblocks the paly button. set to true if play button is clicked while unlocked
+    /* Autres attributs */
+    // valeur false à chaque fois IG débloque le bouton play.
+    // la valeur true si le bouton de lecture est cliqué tout déverrouillé
+    public boolean orderSent;
 
     public JungleIG() {
 
@@ -204,6 +203,7 @@ class JungleIG extends JFrame implements ActionListener {
     public boolean serverConnection() throws IOException {
 
         boolean ok = false;
+        // créer la connexion au serveur, ainsi que les flux uniquement si elle n'est pas active
         if(comm == null){
             try {
                 comm = new Socket(textServerIP.getText(), 12345);
@@ -211,7 +211,9 @@ class JungleIG extends JFrame implements ActionListener {
                 oos = new ObjectOutputStream(comm.getOutputStream());
                 ois = new ObjectInputStream(comm.getInputStream());
 
+                // envoyer le pseudo du joueur
                 oos.writeObject(textPseudo.getText());
+                // lire un booléen -> ok
                 ok = true;
             }
             catch(IOException e) {
@@ -219,9 +221,6 @@ class JungleIG extends JFrame implements ActionListener {
                 System.exit(1);
             }
         }
-        // créer la connexion au serveur, ainsi que les flux uniquement si elle n'est pas active (i.e. comm != null)
-        // envoyer le pseudo du joueur
-        // lire un booléen -> ok
         return ok;
     }
 

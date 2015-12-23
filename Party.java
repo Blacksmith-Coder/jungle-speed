@@ -50,7 +50,7 @@ class Party {
     String resultMsg; // Message envoyé à la fin du tour.
 
     /**
-     * Constructeur de Partie
+     *
      * @param name
      * @param creator
      * @param nbJoueursNecessaire
@@ -272,7 +272,7 @@ class Party {
         if (p != null) {
             for (Player other :  played) {
                 // same = true si la carte visible de p est la même qu'un autre joueur et false sinon
-                if (p.revealCard().equals(other.revealCard())) {
+                if (p.currentCard().equals(other.currentCard())) {
                     same = true;
                 } else {
                     same = false;
