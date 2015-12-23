@@ -283,14 +283,8 @@ class JungleIG extends JFrame implements ActionListener {
                     ThreadClient threadClient = new ThreadClient(this);
                     threadClient.start();
                 }
-
-
-
-
-
-
             } catch (IOException err) {
-                System.err.println("pb with the connection to server: " + err.getMessage() + "\n.Aborting...");
+                System.err.println("probleme de connection serveur : " + err.getMessage() + "\n.Aborting...");
                 System.exit(1);
             }
         } else if (e.getSource() == butJoinParty) {
@@ -312,10 +306,10 @@ class JungleIG extends JFrame implements ActionListener {
                     textInfoParty.append("Attendre la début de la partie");
                     // créer un ThreadClient et lancer son exécution
                     ThreadClient threadClient = new ThreadClient(this);
-                    threadClient.start();
+                    threadClient.run();
                 }
             } catch (IOException err) {
-                System.err.println("pb with the connection to server: " + err.getMessage() + "\n.Aborting...");
+                System.err.println("Problème de connection serveur: " + err.getMessage() + "\n.Arrêt...");
                 System.exit(1);
             }
         } else if (e.getSource() == butPlay) {
