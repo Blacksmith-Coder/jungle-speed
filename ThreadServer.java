@@ -190,7 +190,7 @@ class ThreadServer extends Thread {
             idReq = ois.readInt();
 
             // si etat partie == fin, retour
-            if (currentParty.state == Party.PARTY_END) {
+            if (currentParty.state == 3) {
                 return;
             }
 

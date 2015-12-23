@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="68e5ad07-b856-47b5-8f9d-6b1bf611170a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Game.java" afterPath="$PROJECT_DIR$/Game.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/JungleClient.java" afterPath="$PROJECT_DIR$/JungleClient.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ThreadServer.java" afterPath="$PROJECT_DIR$/ThreadServer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -47,8 +45,8 @@
       <file leaf-file-name="ThreadServer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ThreadServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="10.305699">
-              <caret line="277" column="42" selection-start-line="277" selection-start-column="42" selection-end-line="277" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.4715026">
+              <caret line="184" column="39" selection-start-line="184" selection-start-column="39" selection-end-line="184" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -141,9 +139,9 @@
         <option value="$PROJECT_DIR$/JungleServer.java" />
         <option value="$PROJECT_DIR$/JungleIG.java" />
         <option value="$PROJECT_DIR$/ThreadClient.java" />
-        <option value="$PROJECT_DIR$/ThreadServer.java" />
         <option value="$PROJECT_DIR$/Game.java" />
         <option value="$PROJECT_DIR$/JungleClient.java" />
+        <option value="$PROJECT_DIR$/ThreadServer.java" />
       </list>
     </option>
   </component>
@@ -564,7 +562,7 @@
       <workItem from="1450255105711" duration="667000" />
       <workItem from="1450296472222" duration="10373000" />
       <workItem from="1450351076814" duration="295000" />
-      <workItem from="1450821247757" duration="10651000" />
+      <workItem from="1450821247757" duration="11083000" />
     </task>
     <task id="LOCAL-00001" summary="ajout de test">
       <created>1450048681608</created>
@@ -734,11 +732,17 @@
       <option name="project" value="LOCAL" />
       <updated>1450831854908</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="change">
+      <created>1450832736746</created>
+      <option name="number" value="00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1450832736746</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47020000" />
+    <option name="totallyTimeSpent" value="47452000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1188,14 +1192,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/JungleServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Game.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1214,10 +1210,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/JungleServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ThreadServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="10.305699">
-          <caret line="277" column="42" selection-start-line="277" selection-start-column="42" selection-end-line="277" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.4715026">
+          <caret line="184" column="39" selection-start-line="184" selection-start-column="39" selection-end-line="184" selection-end-column="39" />
           <folding />
         </state>
       </provider>
