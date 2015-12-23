@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="68e5ad07-b856-47b5-8f9d-6b1bf611170a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/JungleIG.java" afterPath="$PROJECT_DIR$/JungleIG.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ThreadClient.java" afterPath="$PROJECT_DIR$/ThreadClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ThreadServer.java" afterPath="$PROJECT_DIR$/ThreadServer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jungle-speed.iws" />
@@ -542,7 +539,7 @@
       <workItem from="1450255105711" duration="667000" />
       <workItem from="1450296472222" duration="10373000" />
       <workItem from="1450351076814" duration="295000" />
-      <workItem from="1450821247757" duration="9762000" />
+      <workItem from="1450821247757" duration="9771000" />
     </task>
     <task id="LOCAL-00001" summary="ajout de test">
       <created>1450048681608</created>
@@ -700,11 +697,17 @@
       <option name="project" value="LOCAL" />
       <updated>1450830756693</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="change">
+      <created>1450831848173</created>
+      <option name="number" value="00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1450831848173</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46131000" />
+    <option name="totallyTimeSpent" value="46140000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
