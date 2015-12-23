@@ -16,14 +16,17 @@ class Game {
 
     public synchronized Party createParty(String name, Player creator, int nbPlayers) {
         Party p = null;
-        for (Party party : parties){
-            // si partie déjà créée par creator, alors renvoyer null
-            if (party.players.get(0).equals(creator.name)){
-                return null;
-            } else {
-                // sinon, créer une Party p et l'ajouter à parties
-                p = new Party(name, creator, nbPlayers);
-                parties.add(p);
+        if (parties.size() == 0) {
+            p = new Party(name, creator, nbPlayers);
+            parties.add(p);
+        } else {
+            for (Party party : parties) {
+                if (party.players.get(0).equals(creator.name)) {
+                    return null;
+                } else {
+                    p = new Party(name, creator, nbPlayers);
+                    parties.add(p);
+                }
             }
         }
 
@@ -33,10 +36,10 @@ class Game {
 
     public synchronized Player createPlayer(String name) {
         Player p = null;
-        for (Party party : parties){
-            for (Player player : players){
+        for (Party party : parties) {
+            for (Player player : players) {
                 // si player avec name comme nom existe déjà, renvoyer null
-                if (player.name.equals(name)){
+                if (player.name.equals(name)) {
                     return null;
 
                 }
@@ -64,23 +67,23 @@ class Game {
 
     public synchronized boolean playerJoinParty(Player player, Party party) {
         // si le player n'est pas dans players, renvoyer false
-        if (!players.contains(player)){
+        if (!players.contains(player)) {
             return false;
         }
 
         // si la party n'est pas dans parties, renvoyer false
-        if (!parties.contains(party)){
+        if (!parties.contains(party)) {
             return false;
         }
 
-        // si l'id player == -1 (i.e. le joueur est déjà dans une partie), renvoyer false
-        if (player.id == -1){
+        // si l'id player != -1 (le joueur est déjà dans une partie), renvoyer false
+        if (player.id != -1) {
             return false;
         }
 
         // sinon, ajouter player à party
         else {
-            party.players.add(player);
+            party.addPlayer(player);
         }
 
         return true;

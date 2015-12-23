@@ -263,10 +263,12 @@ class ThreadServer extends Thread {
         // traiter requete JOIN PARTY (sans oublier les cas d'erreur)
         int numParty = (int) ois.readInt();
         Party party = game.parties.get(numParty);
-        game.playerJoinParty(player, game.parties.get(numParty));
 
         // On ajoute le flux oos au pool de la partie rejointe
-        party.pool.addStream(player.id, oos);
+        if (game.playerJoinParty(player, game.parties.get(numParty))) {
+            party.pool.addStream(player.id, oos);
+            rep = true;
+        }
 
         return rep;
     }
