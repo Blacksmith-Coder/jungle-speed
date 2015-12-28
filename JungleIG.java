@@ -94,22 +94,22 @@ class JungleIG extends JFrame implements ActionListener {
         JPanel panRight = new JPanel();
         panRight.setLayout(new BoxLayout(panRight, BoxLayout.Y_AXIS));
 
-        butListParty = new JButton("List parties");
+        butListParty = new JButton("Liste des parties");
         butListParty.addActionListener(this);
 
         JPanel panCreate = new JPanel();
         panCreate.setLayout(new BoxLayout(panCreate, BoxLayout.X_AXIS));
         textCreate = new JTextField("", 40);
         textCreate.setMaximumSize(textCreate.getPreferredSize());
-        butCreateParty = new JButton("Create party");
+        butCreateParty = new JButton("Creation de parties ");
         butCreateParty.addActionListener(this);
         SpinnerModel model = new SpinnerNumberModel(3, 2, 8, 1);
         spinNbPlayer = new JSpinner(model);
         spinNbPlayer.setMaximumSize(spinNbPlayer.getPreferredSize());
-        panCreate.add(new JLabel("new party name: "));
+        panCreate.add(new JLabel("Nouveau nom de partie : "));
         panCreate.add(textCreate);
         panCreate.add(Box.createHorizontalStrut(20));
-        panCreate.add(new JLabel("number of players: "));
+        panCreate.add(new JLabel("Nombres de joueurs : "));
         panCreate.add(spinNbPlayer);
         panCreate.add(butCreateParty);
 
@@ -117,9 +117,9 @@ class JungleIG extends JFrame implements ActionListener {
         panJoin.setLayout(new BoxLayout(panJoin, BoxLayout.X_AXIS));
         textJoin = new JTextField("", 2);
         textJoin.setMaximumSize(textJoin.getPreferredSize());
-        butJoinParty = new JButton("Join party");
+        butJoinParty = new JButton("Rejoindre la partie ");
         butJoinParty.addActionListener(this);
-        panJoin.add(new JLabel("party number: "));
+        panJoin.add(new JLabel("Num Partie : "));
         panJoin.add(textJoin);
         panJoin.add(butJoinParty);
 
@@ -152,9 +152,9 @@ class JungleIG extends JFrame implements ActionListener {
         JPanel panPlay = new JPanel();
         textPlay = new JTextField("", 5);
         textPlay.setMaximumSize(textPlay.getPreferredSize());
-        butPlay = new JButton("Play");
+        butPlay = new JButton("Jouer");
         butPlay.addActionListener(this);
-        panPlay.add(new JLabel("order: "));
+        panPlay.add(new JLabel("Ordre :  "));
         panPlay.add(textPlay);
         enableOrder(false);
         JPanel panRight = new JPanel(new BorderLayout());
@@ -165,7 +165,7 @@ class JungleIG extends JFrame implements ActionListener {
         panMain.add(scroll);
         panMain.add(panRight);
 
-        butQuit = new JButton("quit");
+        butQuit = new JButton("Quitter");
         butQuit.addActionListener(this);
 
         panAll.add(panMain, BorderLayout.CENTER);
@@ -193,7 +193,7 @@ class JungleIG extends JFrame implements ActionListener {
         textPlay.setEnabled(state);
         butPlay.setEnabled(state);
 
-        if (state == true) {
+        if (state) {
             orderSent = false;
         }
     }
@@ -204,6 +204,7 @@ class JungleIG extends JFrame implements ActionListener {
         // créer la connexion au serveur, ainsi que les flux uniquement si elle n'est pas active
         if (comm == null) {
             try {
+                //Récupération ded l'adresse du serveur
                 comm = new Socket(textServerIP.getText(), 12345);
 
                 oos = new ObjectOutputStream(comm.getOutputStream());

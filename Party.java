@@ -123,13 +123,12 @@ class Party {
         }
     }
 
-    public synchronized void waitForPartyStarts() {
+    public synchronized void waitForPartyStarts() throws InterruptedException {
 
         // tant que état partie == en attente ET nb joueurs dans la partie != nb joueurs nécessaires
-        while (this.getCurrentState() == PARTY_WAITING && nbrJoueurs != nbJoueursNecessaire) {
-            this.setCurrentState(PARTY_WAITING);
+        while (state == 0 && nbJoueursNecessaire != nbrJoueurs) {
+            wait();
         }
-        this.setCurrentState(PARTY_ONGOING);
     }
 
     /**
@@ -209,13 +208,17 @@ class Party {
 
     public synchronized Object getCurrentCards() {
         // Récupération de toutes les cartes visibles autour de la table.
-        CardPacket list = getAllRevealedCards();
-        List<Card> unelist = list.getAll();
-        String chaine = "";
-        for (Card carte : unelist) {
-            chaine += carte.card;
+        Object s = "";
+        String res = "";
+        CardPacket packet = new CardPacket();
+        for (Player p : players) {
+            packet.addCards(p.giveRevealedCards());
         }
-        Object s = chaine;
+
+        for (Card c : packet.cards) {
+            res += c.card + ", ";
+        }
+        s = res;
         return s;
     }
 
@@ -502,7 +505,7 @@ class Party {
                 // le gagnant gagne avec main sur le totem
                 else if (lastRevealedCard.card == 'H') {
                     Player looser = lstLoosers.get(0); // normally there should be a single player in lstLoosers list
-                    resultMsg = resultMsg + "He gives his cards and those under totem to " + looser.name + ".\n";
+                    resultMsg = resultMsg + "Il prend les cartes et les places sous le totem " + looser.name + ".\n";
                     CardPacket winnerPack = getWinnerRevealedCards(turnWinner);
                     looser.takeCards(winnerPack.getAll());
                 }
@@ -536,7 +539,7 @@ class Party {
         }
         System.out.println("-------------------------------------------------------------------");
         for (Player p : players) {
-            System.out.println(p.name + " has " + p.revealedCards.size() + " revealed cards and " + p.hiddenCards.size() + " hidden cards");
+            System.out.println(p.name + " a " + p.revealedCards.size() + " cartes visibles et " + p.hiddenCards.size() + " hidden cards");
         }
         System.out.println("-------------------------------------------------------------------");
     }
