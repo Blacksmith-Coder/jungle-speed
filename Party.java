@@ -50,7 +50,6 @@ class Party {
     String resultMsg; // Message envoyé à la fin du tour.
 
     /**
-     *
      * @param name
      * @param creator
      * @param nbJoueursNecessaire
@@ -64,7 +63,7 @@ class Party {
         players.add(creator); // Le créateur de la partie est le premier joueur de la partie
         nbrJoueurs = 1;
         List<Card> heap = allCards.takeXFirst(12);
-        creator.joinParty(1,heap);
+        creator.joinParty(1, heap);
         underTotem = new ArrayList<Card>();
         played = new ArrayList<Player>();
         result = new ArrayList<Integer>();
@@ -77,37 +76,28 @@ class Party {
 
     //Terminée.
     public synchronized void addPlayer(Player other) {
+
         /*
          si other n'est pas déjà dans cette partie & nbdejoueurs < nbjoueursnécessaires :
          alors  ajouter other à players
           */
 
-            List<Card> distri = new ArrayList<>();
-            if (!players.contains(other) && this.nbrJoueurs < nbJoueursNecessaire) {
-
-                this.nbrJoueurs++; //On incrémente le nbr de joueur de la partie
-
-                // obtenir 12 cartes de allCards
-                 distri = allCards.takeXFirst(12);
-
-                // Affectation au joueur de son id et de son paquet.
-                other.joinParty(loto.nextInt(),distri);
-                players.add(other);
-
-            } else if (nbrJoueurs == nbJoueursNecessaire) {
-
-                // joueur du prochain tour  = premier joueur de la liste.
+        System.out.println("avant if addPlayer");
+        if (!(players.contains(other)) && (nbrJoueurs < nbJoueursNecessaire)) {
+            System.out.println("dans if addPlayer");
+            players.add(other);
+            nbrJoueurs++;
+            List<Card> paquet = allCards.takeXFirst(12);
+            other.joinParty(nbrJoueurs, paquet);
+            if (nbrJoueurs == nbJoueursNecessaire) {
                 playerOfNextTurn = players.get(0);
-                // nb de joueur dans le tour = 0
                 nbPlayerInTurn = 0;
-                // Initialiser un nouveau tour.
-                this.initNewTurn();
-                //Etat partie "en cours"
-                this.setCurrentState(1);
-                //On réveille tous les threads.
+                initNewTurn();
+                state = PARTY_ONGOING;
                 notifyAll();
             }
         }
+    }
 
 
     public synchronized boolean removePlayer(Player other) {
@@ -123,7 +113,7 @@ class Party {
 
         // mettre des jetons dans le sémaphore (au cas où des threads soient
         // bloqués dans la barrière de début de tour)
-        commenceTour.put(nbrJoueurs);
+        commenceTour.put(1);
 
         // si nb joueurs dans partie == 0, renvoyer vrai sinon renvoyer false
         if (nbrJoueurs == 0) {
@@ -136,8 +126,8 @@ class Party {
     public synchronized void waitForPartyStarts() {
 
         // tant que état partie == en attente ET nb joueurs dans la partie != nb joueurs nécessaires
-        while(this.getCurrentState() == PARTY_WAITING && nbrJoueurs != nbJoueursNecessaire) {
-          this.setCurrentState(PARTY_WAITING);
+        while (this.getCurrentState() == PARTY_WAITING && nbrJoueurs != nbJoueursNecessaire) {
+            this.setCurrentState(PARTY_WAITING);
         }
         this.setCurrentState(PARTY_ONGOING);
     }
@@ -222,7 +212,7 @@ class Party {
         CardPacket list = getAllRevealedCards();
         List<Card> unelist = list.getAll();
         String chaine = "";
-        for (Card carte :  unelist) {
+        for (Card carte : unelist) {
             chaine += carte.card;
         }
         Object s = chaine;
@@ -232,12 +222,13 @@ class Party {
     /**
      * Methode qui récupère toutes les cartes visibles et les
      * renvoie sous forme d'un paquet de cartes.
+     *
      * @return
      */
     private CardPacket getAllRevealedCards() {
 
         CardPacket packet = new CardPacket();
-        for(Player p : players) {
+        for (Player p : players) {
             packet.addCards(p.giveRevealedCards());
         }
         packet.addCards(underTotem);
@@ -263,6 +254,7 @@ class Party {
 
     /**
      * Méthode pour controler si des joueurs on la même carte visible.
+     *
      * @param p
      * @return
      */
@@ -270,7 +262,7 @@ class Party {
         boolean same = false;
         // si p != null
         if (p != null) {
-            for (Player other :  played) {
+            for (Player other : played) {
                 // same = true si la carte visible de p est la même qu'un autre joueur et false sinon
                 if (p.currentCard().equals(other.currentCard())) {
                     same = true;
@@ -320,7 +312,7 @@ class Party {
 
             // si ordre == ACT_NOP -> le joueur a fait une erreur
 
-            if (order == JungleServer.ACT_NOP ) {
+            if (order == JungleServer.ACT_NOP) {
                 result.add(RES_ERROR);
             }
 
@@ -409,7 +401,7 @@ class Party {
                         result.add(RES_LOST);
                     }
                 } else {
-                   // sinon le joueur a fait une erreur
+                    // sinon le joueur a fait une erreur
                     result.add(RES_ERROR);
                 }
             }
@@ -438,7 +430,7 @@ class Party {
         List<Player> lstLoosers = new ArrayList<Player>(); // liste des joueurs qui ont perdu ce tour
         Player turnWinner = null;
 
-        for(int i=0;i< nbrJoueurs;i++) {
+        for (int i = 0; i < nbrJoueurs; i++) {
             if (result.get(i) == RES_ERROR) {
                 lstErrors.add(played.get(i));
             }
@@ -457,34 +449,33 @@ class Party {
             */
             CardPacket errorPack = getAllRevealedCards();
 
-            int nb = (errorPack.size()+1) / lstErrors.size();
-            for(int i=0;i<lstErrors.size();i++) {
+            int nb = (errorPack.size() + 1) / lstErrors.size();
+            for (int i = 0; i < lstErrors.size(); i++) {
                 Player p = lstErrors.get(i);
-                if (i < lstErrors.size()-1) {
+                if (i < lstErrors.size() - 1) {
                     p.takeCards(errorPack.takeXFirst(nb));
                     resultMsg = resultMsg + p.name + " a fait une erreur, il prend " + nb + " cartes à tous les autres joueurs.\n";
-                }
-                else {
+                } else {
                     resultMsg = resultMsg + p.name + " a fait une erreur, il prend " + errorPack.size() + " cartes à tous les autres joueurs.\n";
                     p.takeCards(errorPack.getAll());
                 }
             }
             // verifier si quelqu'un a gagné.
-            for(Player p :players) {
+            for (Player p : players) {
                 if (p.hasWon()) {
-                    resultMsg = resultMsg + p.name + " wins the party";
+                    resultMsg = resultMsg + p.name + " Gagne la partie";
                     setCurrentState(PARTY_END);
                     return;
                 }
             }
             playerOfNextTurn = lstErrors.get(loto.nextInt(lstErrors.size()));
-            resultMsg = resultMsg + "Next player: "+ playerOfNextTurn.name;
+            resultMsg = resultMsg + "Joueur suivant : " + playerOfNextTurn.name;
         }
         // sinon si aucun joueur n'a fait d'erreur
         else {
 
             int indexWinner = -1;
-            for(Integer r : result) {
+            for (Integer r : result) {
                 if (r == RES_WIN) {
                     indexWinner = r;
                     break;
@@ -492,26 +483,26 @@ class Party {
             }
             // Si personne ne gagne lors de ce tour
             if (indexWinner == -1) {
-                resultMsg = resultMsg + "Nobody won this turn\n";
+                resultMsg = resultMsg + "Personne ne gagne ce tour \n";
                 playerOfNextTurn = players.get(currentPlayer.id % nbrJoueurs);
-                resultMsg = resultMsg + "Next player: "+ playerOfNextTurn.name;
+                resultMsg = resultMsg + "Joueur suivant : " + playerOfNextTurn.name;
             }
 
             // Autrement si un joueur est le gagnant : le résultat dépend des dernières cartes révélées
             else {
                 turnWinner = players.get(indexWinner);
-                resultMsg = resultMsg + turnWinner.name + " won the turn.\n";
+                resultMsg = resultMsg + turnWinner.name + " Gagne le tour.\n";
 
                 // Si le gagnant remporte en prenant un totem
                 if (lastRevealedCard.card == 'T') {
-                    resultMsg = resultMsg + "He puts his cards under the totem.\n";
+                    resultMsg = resultMsg + " Il prend les cartes sous le totem .\n";
                     underTotem.addAll(turnWinner.revealedCards.getAll());
                     turnWinner.revealedCards.clear();
                 }
                 // le gagnant gagne avec main sur le totem
                 else if (lastRevealedCard.card == 'H') {
                     Player looser = lstLoosers.get(0); // normally there should be a single player in lstLoosers list
-                    resultMsg = resultMsg + "He gives his cards and those under totem to "+looser.name+".\n";
+                    resultMsg = resultMsg + "He gives his cards and those under totem to " + looser.name + ".\n";
                     CardPacket winnerPack = getWinnerRevealedCards(turnWinner);
                     looser.takeCards(winnerPack.getAll());
                 }
@@ -519,21 +510,20 @@ class Party {
                 else {
                     // distribuer la carte révélée du gagnant au perdant
                     CardPacket winnerPack = getWinnerRevealedCards(turnWinner);
-                    int nb = (winnerPack.size()+1) / lstLoosers.size();
-                    for(int i=0;i<lstLoosers.size();i++) {
+                    int nb = (winnerPack.size() + 1) / lstLoosers.size();
+                    for (int i = 0; i < lstLoosers.size(); i++) {
                         Player p = players.get(i);
-                        if (i < lstLoosers.size()-1) {
+                        if (i < lstLoosers.size() - 1) {
                             p.takeCards(winnerPack.takeXFirst(nb));
-                            resultMsg = resultMsg + p.name + " perd le duel contre "+turnWinner.name+". Il prend " + nb + "cartes.\n";
-                        }
-                        else {
+                            resultMsg = resultMsg + p.name + " perd le duel contre " + turnWinner.name + ". Il prend " + nb + "cartes.\n";
+                        } else {
                             p.takeCards(winnerPack.getAll());
-                            resultMsg = resultMsg + p.name + " perd le duel contre  "+turnWinner.name+". Il prend " + winnerPack.size() + "cartes.\n";
+                            resultMsg = resultMsg + p.name + " perd le duel contre  " + turnWinner.name + ". Il prend " + winnerPack.size() + "cartes.\n";
                         }
                     }
                 }
                 // Verifier si quelqu'un à gagné
-                for(Player p :players) {
+                for (Player p : players) {
                     if (p.hasWon()) {
                         resultMsg = resultMsg + p.name + " gagne la partie";
                         setCurrentState(PARTY_END);
@@ -541,12 +531,12 @@ class Party {
                     }
                 }
                 playerOfNextTurn = lstLoosers.get(loto.nextInt(lstLoosers.size()));
-                resultMsg = resultMsg + "Joueur suivant : "+ playerOfNextTurn.name;
+                resultMsg = resultMsg + "Joueur suivant : " + playerOfNextTurn.name;
             }
         }
         System.out.println("-------------------------------------------------------------------");
-        for(Player p : players) {
-            System.out.println(p.name+" has "+p.revealedCards.size()+" revealed cards and "+p.hiddenCards.size()+ " hidden cards");
+        for (Player p : players) {
+            System.out.println(p.name + " has " + p.revealedCards.size() + " revealed cards and " + p.hiddenCards.size() + " hidden cards");
         }
         System.out.println("-------------------------------------------------------------------");
     }

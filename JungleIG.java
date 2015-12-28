@@ -174,25 +174,21 @@ class JungleIG extends JFrame implements ActionListener {
         return panAll;
     }
 
-    /* setConnectionPanel() : set the central widget of the window with connection panel */
     public void setConnectionPanel() {
         setContentPane(panConn);
         pack();
     }
 
-    /* setConnectionPanel() : set the central widget of the window with "before party" panel */
     public void setInitPanel() {
         setContentPane(panInit);
         pack();
     }
 
-    /* setConnectionPanel() : set the central widget of the window with party panel */
     public void setPartyPanel() {
         setContentPane(panParty);
         pack();
     }
 
-    /* enableOrder() : enable/disable the play button and associated textfield */
     public void enableOrder(boolean state) {
         textPlay.setEnabled(state);
         butPlay.setEnabled(state);
@@ -306,7 +302,7 @@ class JungleIG extends JFrame implements ActionListener {
                     textInfoParty.append("Attendre la début de la partie");
                     // créer un ThreadClient et lancer son exécution
                     ThreadClient threadClient = new ThreadClient(this);
-                    threadClient.run();
+                    threadClient.start();
                 }
             } catch (IOException err) {
                 System.err.println("Problème de connection serveur: " + err.getMessage() + "\n.Arrêt...");

@@ -88,6 +88,7 @@ class ThreadServer extends Thread {
 
         try {
             while (true) {
+
                 initLoop();
                 // signaux de synchro de sorte que le threadclient n'envoie pas rapidement une demande
                 oos.writeBoolean(true);
@@ -181,23 +182,34 @@ class ThreadServer extends Thread {
         int idReq;
 
         while (true) {
+
+            // si etat partie == fin, retour
+            System.out.println("passe");
+            if (currentParty.state == 3) return;
+
+            System.out.println("passe2");
             // recevoir n° requete
             idReq = ois.readInt();
 
             // si etat partie == fin, retour
             if (currentParty.state == 3) {
+                System.out.println("retour");
                 return;
             }
 
+            System.out.println("passe3");
             // si n° req correspond appeler la méthode correspondante
             switch (idReq) {
                 case JungleServer.REQ_WAITPARTYSTARTS:
+                    System.out.println("Attente de démarre partie");
                     requestWaitPartyStarts();
                     break;
                 case JungleServer.REQ_WAITTURNSTARTS:
+                    System.out.println("Attendre tour demarre");
                     requestWaitTurnStarts();
                     break;
                 case JungleServer.REQ_PLAY:
+                    System.out.println("Joue");
                     requestPlay();
                     break;
                 default:
