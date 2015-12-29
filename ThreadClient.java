@@ -6,7 +6,6 @@ import javax.swing.*;
 
 class ThreadClient extends Thread {
 
-    private static Random loto = new Random(Calendar.getInstance().getTimeInMillis());
 
     JungleIG ig;
     ObjectInputStream ois;

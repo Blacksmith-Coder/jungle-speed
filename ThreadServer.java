@@ -6,7 +6,6 @@ import java.net.*;
 
 class ThreadServer extends Thread {
 
-    private static Random loto = new Random(Calendar.getInstance().getTimeInMillis());
 
     Socket comm;
     Game game;
@@ -160,7 +159,7 @@ class ThreadServer extends Thread {
             switch (idReq) {
                 case JungleServer.REQ_LISTPARTY:
                     requestListParty();
-                    stop = true;
+                    stop = false;
                     break;
                 case JungleServer.REQ_CREATEPARTY:
                     requestCreateParty();
@@ -268,7 +267,7 @@ class ThreadServer extends Thread {
         boolean rep = false; // mis a true si la requête permet effectivement de rejoindre une partie existante
 
         // traiter requete JOIN PARTY (sans oublier les cas d'erreur)
-        int numParty = (int) ois.readInt();
+        int numParty = ois.readInt();
         Party party = game.parties.get(numParty);
 
         // On ajoute le flux oos au pool de la partie rejointe

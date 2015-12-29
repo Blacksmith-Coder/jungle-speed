@@ -90,10 +90,12 @@ class Party {
             List<Card> paquet = allCards.takeXFirst(12);
             other.joinParty(nbrJoueurs, paquet);
             if (nbrJoueurs == nbJoueursNecessaire) {
+                System.out.println("Avant accés players");
                 playerOfNextTurn = players.get(0);
                 nbPlayerInTurn = 0;
                 initNewTurn();
                 state = PARTY_ONGOING;
+                System.out.println("Après accés players");
                 notifyAll();
             }
         }
