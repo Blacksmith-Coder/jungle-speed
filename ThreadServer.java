@@ -250,7 +250,7 @@ class ThreadServer extends Thread {
             String nomParty = (String) ois.readObject();
             int nbJoueurs = ois.readInt();
             Party party = game.createParty(nomParty, player, nbJoueurs);
-
+            System.out.println(party.getClass().toString());
             //On ajoute le flux oos à la partie crée :
             party.pool.addStream(player.id, oos);
             currentParty = party;
@@ -272,6 +272,7 @@ class ThreadServer extends Thread {
 
         // On ajoute le flux oos au pool de la partie rejointe
         if (game.playerJoinParty(player, game.parties.get(numParty))) {
+            currentParty = party;
             party.pool.addStream(player.id, oos);
             rep = true;
         }

@@ -21,7 +21,7 @@ class Game {
             parties.add(p);
         } else {
             for (Party party : parties) {
-                if (party.players.get(0).equals(creator.name)) {
+                if (party.players.get(0).name.equals(creator.name)) {
                     return null;
                 } else {
                     p = new Party(name, creator, nbPlayers);

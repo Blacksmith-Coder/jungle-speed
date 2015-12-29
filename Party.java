@@ -309,7 +309,7 @@ class Party {
            Quelque soit la valeur de order, il faut déterminer le résultat
            de l'action de player et ajouter celui-ci dans la list result.
            Ainsi, comme played et result sont remplis en même temps,
-           on peut retrouver faiclement le résultat de chaque joueur.
+           on peut retrouver facilement le résultat de chaque joueur.
         */
 
         // si dernière carte révélée == H
