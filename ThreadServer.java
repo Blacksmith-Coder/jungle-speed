@@ -275,6 +275,7 @@ class ThreadServer extends Thread {
             currentParty = party;
             party.pool.addStream(player.id, oos);
             rep = true;
+            oos.writeInt(player.id);
         }
 
         return rep;

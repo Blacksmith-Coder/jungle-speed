@@ -290,11 +290,14 @@ class JungleIG extends JFrame implements ActionListener {
                 int idPlayer;
                 // envoyer requête JOIN PARTY (paramètres : numero partie)
                 oos.writeInt(JungleServer.REQ_JOINPARTY);
+                System.out.println("requete envoyée");
                 int numPartie = Integer.parseInt(textJoin.getText());
                 oos.writeInt(numPartie);
                 oos.flush();
+                System.out.println("numPartie flushé");
                 // recevoir résultat -> idPlayer
                 idPlayer = ois.readInt();
+                System.out.println("idplayer reçu : " + idPlayer);
                 // si idPlayer >= 1 :
                 if (idPlayer >= 1) {
                     // mettre le panneau party au centre
@@ -302,8 +305,10 @@ class JungleIG extends JFrame implements ActionListener {
                     // afficher un message dans textInfoParty comme quoi il faut attendre le début de partie
                     textInfoParty.append("Attendre la début de la partie");
                     // créer un ThreadClient et lancer son exécution
+                    System.out.println("avant démarrage du thread");
                     ThreadClient threadClient = new ThreadClient(this);
                     threadClient.start();
+                    System.out.println("Apres le thread");
                 }
             } catch (IOException err) {
                 System.err.println("Problème de connection serveur: " + err.getMessage() + "\n.Arrêt...");
