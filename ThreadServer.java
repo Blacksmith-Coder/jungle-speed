@@ -184,7 +184,9 @@ class ThreadServer extends Thread {
 
             // si etat partie == fin, retour
             System.out.println("passe");
-            if (currentParty.state == 3) return;
+            if (currentParty.state == 3) {
+                return;
+            }
 
             System.out.println("passe2");
             // recevoir n° requete

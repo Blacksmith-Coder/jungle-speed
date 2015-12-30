@@ -25,12 +25,14 @@ class ThreadClient extends Thread {
 
             // recevoir booléen qui signale que le serveur est prêt
             stop = ois.readBoolean();
+            System.out.println("Bool reçu " + stop);
 
-            // recevoir booléen qui signale que le serveur est prêt
+            //Envoyer requête attendre départ de la partie
             oos.writeInt(JungleServer.REQ_WAITPARTYSTARTS);
-
+            System.out.println("requête envoyée");
             // recevoir l'id pour la partie
             int idJoueur = ois.readInt();
+            System.out.println("id reçue " + idJoueur);
 
 
             while (!stop) {
