@@ -9,6 +9,8 @@
        - Un thread peut directement prendre un jeton dans la case si il ya au moins un.
        - Si il n'y a pas de jetons, le thread doit attendre que l'un soit mis.
        - Un thread peut mettre autant de jetons qu'il veut dans la boîte.
+       Le wait agit sur le thread principal et fige tous le mmonde
+       -> notifyAll relance tous le monde.
  */
 
 class Semaphore {

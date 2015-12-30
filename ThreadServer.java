@@ -191,6 +191,7 @@ class ThreadServer extends Thread {
             System.out.println("passe2");
             // recevoir n° requete
             idReq = ois.readInt();
+            System.out.println("Après réception requête");
 
             // si etat partie == fin, retour
             if (currentParty.state == 3) {
@@ -278,6 +279,7 @@ class ThreadServer extends Thread {
             party.pool.addStream(player.id, oos);
             rep = true;
             oos.writeInt(player.id);
+            oos.flush();
         }
 
         return rep;
@@ -287,6 +289,7 @@ class ThreadServer extends Thread {
 
         currentParty.waitForPartyStarts();
         oos.writeInt(player.id);
+        oos.flush();
 
     }
 
@@ -305,8 +308,10 @@ class ThreadServer extends Thread {
         // si etat partie == fin, envoyer -1 (LOST) au client sinon envoyer id joueur courant
         if (currentParty.state == Party.PARTY_END) {
             oos.writeInt(Party.RES_LOST);
+            oos.flush();
         } else {
             oos.writeInt(currentPlayer.id);
+            oos.flush();
         }
 
         // Si this est le thread associé au joueur courant
@@ -370,6 +375,7 @@ class ThreadServer extends Thread {
                     currentParty.pool.sendToAll("Partie finie");
                     // envoyer true (= fin de partie)
                     oos.writeBoolean(true);
+                    oos.flush();
                     return;
                 }
 
@@ -382,8 +388,10 @@ class ThreadServer extends Thread {
                 // si etat partie == fin, envoyer true, sinon envoyer false
                 if (currentParty.state == Party.PARTY_END) {
                     oos.writeBoolean(true);
+                    oos.flush();
                 } else {
                     oos.writeBoolean(false);
+                    oos.flush();
                 }
             }
         } catch (ClassNotFoundException e) {

@@ -212,6 +212,7 @@ class JungleIG extends JFrame implements ActionListener {
 
                 // envoyer le pseudo du joueur
                 oos.writeObject(textPseudo.getText());
+                oos.flush();
                 // lire un booléen -> ok
                 ok = true;
             } catch (IOException e) {
@@ -264,7 +265,9 @@ class JungleIG extends JFrame implements ActionListener {
                 boolean ok;
                 // envoyer requête CREATE PARTY (paramètres : nom partie et nb joueurs nécessaires)
                 oos.writeInt(JungleServer.REQ_CREATEPARTY);
+                oos.flush();
                 oos.writeObject(textCreate.getText());
+                oos.flush();
                 int nbJoueurs = (int) spinNbPlayer.getValue();
                 oos.writeInt(nbJoueurs);
                 oos.flush();
@@ -290,6 +293,7 @@ class JungleIG extends JFrame implements ActionListener {
                 int idPlayer;
                 // envoyer requête JOIN PARTY (paramètres : numero partie)
                 oos.writeInt(JungleServer.REQ_JOINPARTY);
+                oos.flush();
                 System.out.println("requete envoyée");
                 int numPartie = Integer.parseInt(textJoin.getText());
                 oos.writeInt(numPartie);
@@ -318,6 +322,7 @@ class JungleIG extends JFrame implements ActionListener {
             try {
                 // envoyer requête PLAY (paramètre : contenu de textPlay)
                 oos.writeInt(JungleServer.REQ_PLAY);
+                oos.flush();
                 oos.writeObject(textPlay.getText());
                 oos.flush();
                 orderSent = true;

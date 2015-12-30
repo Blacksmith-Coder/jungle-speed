@@ -29,16 +29,18 @@ class ThreadClient extends Thread {
 
             //Envoyer requête attendre départ de la partie
             oos.writeInt(JungleServer.REQ_WAITPARTYSTARTS);
+            oos.flush();
             System.out.println("requête envoyée");
             // recevoir l'id pour la partie
             int idJoueur = ois.readInt();
             System.out.println("id reçue " + idJoueur);
 
 
-            while (!stop) {
+            while (stop) {
 
                 // envoyer requête "attendre début tour"
                 oos.writeInt(JungleServer.REQ_WAITTURNSTARTS);
+                oos.flush();
 
                 // recevoir id joueur courant
                 int idJoueurCourant = ois.readInt();
@@ -79,7 +81,9 @@ class ThreadClient extends Thread {
 
                     // envoyer requête PLAY avec comme paramètre chaîne vide
                     oos.writeInt(JungleServer.REQ_PLAY);
+                    oos.flush();
                     oos.writeObject("");
+                    oos.flush();
                 }
 
                 // recevoir résultat du tour et l'afficher dans l'IG

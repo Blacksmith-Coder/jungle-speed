@@ -301,6 +301,14 @@ class Party {
        retrun true si dernier thread à effectuer integratePlayerOrder
      */
 
+    /**
+     * Méthode qui place dans une collection les joueurs dans l'odre dans
+     * lequel il ont joué et fait correspondre dans le tableau résult
+     * le résultat de leur coup.
+     * @param player
+     * @param order
+     * @return
+     */
     public synchronized boolean integratePlayerOrder(Player player, int order) {
 
         played.add(player);
