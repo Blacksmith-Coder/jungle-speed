@@ -115,7 +115,7 @@ class Party {
 
         // mettre des jetons dans le sémaphore (au cas où des threads soient
         // bloqués dans la barrière de début de tour)
-        commenceTour.put(1);
+        commenceTour.put(nbrJoueurs);
 
         // si nb joueurs dans partie == 0, renvoyer vrai sinon renvoyer false
         if (nbrJoueurs == 0) {
@@ -152,7 +152,7 @@ class Party {
             nbPlayerInTurn = 0;
             currentPlayer = playerOfNextTurn;
             initNewTurn();
-            commenceTour.put(1); //semaphore
+            commenceTour.put(nbrJoueurs); //semaphore
         }
 
         // prendre un jeton dans le sémaphore

@@ -204,7 +204,7 @@ class JungleIG extends JFrame implements ActionListener {
         // créer la connexion au serveur, ainsi que les flux uniquement si elle n'est pas active
         if (comm == null) {
             try {
-                //Récupération ded l'adresse du serveur
+                //Récupération de l'adresse du serveur
                 comm = new Socket(textServerIP.getText(), 12345);
 
                 oos = new ObjectOutputStream(comm.getOutputStream());
@@ -251,7 +251,7 @@ class JungleIG extends JFrame implements ActionListener {
                 if (pret) {
                     String nomParty = (String) ois.readObject();
                     System.out.println("apres read");
-                    textInfoInit.append(nomParty);
+                    textInfoInit.append(nomParty+" ");
                 }
 
             } catch (ClassNotFoundException err) {
@@ -265,14 +265,13 @@ class JungleIG extends JFrame implements ActionListener {
                 boolean ok;
                 // envoyer requête CREATE PARTY (paramètres : nom partie et nb joueurs nécessaires)
                 oos.writeInt(JungleServer.REQ_CREATEPARTY);
-                oos.flush();
                 oos.writeObject(textCreate.getText());
-                oos.flush();
                 int nbJoueurs = (int) spinNbPlayer.getValue();
                 oos.writeInt(nbJoueurs);
                 oos.flush();
                 // recevoir résultat -> ok
                 ok = ois.readBoolean();
+                System.out.println(ok);
                 // si ok == true :
                 if (ok) {
                     // mettre le panneau party au centre
@@ -322,7 +321,6 @@ class JungleIG extends JFrame implements ActionListener {
             try {
                 // envoyer requête PLAY (paramètre : contenu de textPlay)
                 oos.writeInt(JungleServer.REQ_PLAY);
-                oos.flush();
                 oos.writeObject(textPlay.getText());
                 oos.flush();
                 orderSent = true;

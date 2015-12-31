@@ -38,6 +38,7 @@ class ThreadClient extends Thread {
 
             while (stop) {
 
+                System.out.println("Entrée dans la boucle while de ThreadClient");
                 // envoyer requête "attendre début tour"
                 oos.writeInt(JungleServer.REQ_WAITTURNSTARTS);
                 oos.flush();
@@ -45,12 +46,12 @@ class ThreadClient extends Thread {
                 // recevoir id joueur courant
                 int idJoueurCourant = ois.readInt();
 
+
                 // si id joueur courant < 0, arreter thread
                 if (idJoueurCourant < 0) {
                     interrupt();
-
-
                 }
+
                 // sinon si id joueur courant == mon id : afficher message dans ig
                 else if (idJoueurCourant == idJoueur) {
                     ig.textInfoParty.add(new JLabel("C'est votre tour"));
@@ -81,7 +82,6 @@ class ThreadClient extends Thread {
 
                     // envoyer requête PLAY avec comme paramètre chaîne vide
                     oos.writeInt(JungleServer.REQ_PLAY);
-                    oos.flush();
                     oos.writeObject("");
                     oos.flush();
                 }

@@ -43,7 +43,7 @@ public class OutputStreamPool {
         for (Integer dest : pool.keySet()) {
             try {
                 pool.get(dest).writeObject(o);
-                pool.get(dest).flush();
+                //pool.get(dest).flush();
             }
             catch(IOException e) {
                 err = true;
