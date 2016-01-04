@@ -8,7 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-
+/**
+ * Classe JungleIG : Interface graphique du jeu
+ */
 class JungleIG extends JFrame implements ActionListener {
 
     /* attributs de communication */
@@ -52,7 +54,10 @@ class JungleIG extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-
+    /**
+     * methode creatWidget
+     * dimmensionne panelConnect et panelInit
+     */
     public void createWidget() {
 
         panConn = createPanelConnect();
@@ -64,6 +69,10 @@ class JungleIG extends JFrame implements ActionListener {
         setContentPane(panConn);
     }
 
+    /**
+     * Méthode de création du panel de Connection
+     * @return
+     */
     private JPanel createPanelConnect() {
 
         JPanel panAll = new JPanel(new BorderLayout());
@@ -89,6 +98,10 @@ class JungleIG extends JFrame implements ActionListener {
         return panAll;
     }
 
+    /**
+     * Méthode de création du panelInit
+     * @return
+     */
     private JPanel createPanelInit() {
 
         JPanel panRight = new JPanel();
@@ -141,6 +154,10 @@ class JungleIG extends JFrame implements ActionListener {
         return panAll;
     }
 
+    /**
+     * Méthode de création du panel de Jeu
+     * @return
+     */
     private JPanel createPanelPlay() {
 
         JPanel panAll = new JPanel(new BorderLayout());
@@ -198,6 +215,11 @@ class JungleIG extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Methode de connection avec le serveur
+     * @return
+     * @throws IOException
+     */
     public boolean serverConnection() throws IOException {
 
         boolean ok = false;
