@@ -266,7 +266,7 @@ class JungleIG extends JFrame implements ActionListener {
                 // envoyer requête CREATE PARTY (paramètres : nom partie et nb joueurs nécessaires)
                 oos.writeInt(JungleServer.REQ_CREATEPARTY);
                 oos.writeObject(textCreate.getText());
-                int nbJoueurs = (int) spinNbPlayer.getValue();
+                int nbJoueurs = (Integer) spinNbPlayer.getValue();
                 oos.writeInt(nbJoueurs);
                 oos.flush();
                 // recevoir résultat -> ok
